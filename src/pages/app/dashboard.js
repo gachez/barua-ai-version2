@@ -10,11 +10,7 @@ import dynamic from "next/dynamic";
 const MenuGrid = dynamic(()=>import("@/components/MenuGrid"))
 const NavBarTop = dynamic(()=>import("@/components/NavBarTop"))
 
-  function classNames(...classes) {
-    return classes.filter(Boolean).join(' ')
-  }
 export default function Dashboard() {
-  const router = useRouter();
   const [docum, setDocum] = React.useState()
   const [showAlert, setShowAlert] = React.useState(false)
   const [signedInUser, setSignedInUser] = React.useState('')
