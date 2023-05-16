@@ -326,9 +326,9 @@ export default function FormLayout() {
                       >
                         <option>Use saved offer</option>
                         {
-                          savedOffers.map(it => {
+                          savedOffers.map((it,index) => {
                             return(
-                              <option value={it.offer} className="text-gray-900">{it?.name}</option>
+                              <option key={index} value={it.offer} className="text-gray-900">{it?.name}</option>
                             )
                           })
                         }
@@ -363,7 +363,7 @@ export default function FormLayout() {
                 </label>
                 <div className="col-span-full">
                   <p className="mt-3 text-sm leading-6 text-gray-400">
-                    Information about the target's industry, role, and pain
+                    Information about the target&apos;s industry&lsquo; role&lsquo; and pain
                     points to ensure that the email content is relevant and
                     personalized.
                   </p>
