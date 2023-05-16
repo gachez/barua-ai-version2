@@ -32,6 +32,7 @@ export default function NavBarTop(props) {
 
   React.useEffect(() => {
     console.log(asPath, pathname)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
   const userNavigation = [
     { name: 'Sign out', href: '/app/auth' },

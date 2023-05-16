@@ -65,6 +65,7 @@ export default function OfferList() {
 
     useEffect(() => {
         getOffers()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     async function saveOffer(){
@@ -154,8 +155,8 @@ export default function OfferList() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-800">
-                      {userEmails.map((email) => (
-                        <tr className='cursor-pointer' onClick={() => {
+                      {userEmails.map((email,index) => (
+                        <tr key={index} className='cursor-pointer' onClick={() => {
                           setShowModal(true)
                           setSelectedEmail(email)
                         }} >

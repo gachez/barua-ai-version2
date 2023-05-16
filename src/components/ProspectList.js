@@ -59,6 +59,7 @@ export default function ProspectList() {
 
     useEffect(() => {
         getEmails()
+        // eslint-disable-next-line react-hooks/exhaustive-deps        
     }, [])
 
   return (
@@ -115,8 +116,8 @@ export default function ProspectList() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-800">
-                      {userEmails.map((email) => (
-                        <tr className='cursor-pointer' onClick={() => {
+                      {userEmails.map((email,index) => (
+                        <tr className='cursor-pointer' key={index} onClick={() => {
                           setShowModal(true)
                           setSelectedEmail(email)
                         }} >

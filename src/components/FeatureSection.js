@@ -6,6 +6,7 @@ import {
     LockClosedIcon,
     ServerIcon,
   } from '@heroicons/react/20/solid'
+  import Image from 'next/image'
   
   const features = [
     {
@@ -44,7 +45,7 @@ import {
         </div>
         <div className="relative overflow-hidden pt-16">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <img
+            <Image
               src="https://tailwindui.com/img/component-images/dark-project-app-screenshot.png"
               alt="App screenshot"
               className="mb-[-12%] rounded-xl shadow-2xl ring-1 ring-white/10"
