@@ -1,4 +1,4 @@
-
+"use client"
 import Footer from "@/components/Footer";
 import dynamic from "next/dynamic";
 const NavBarTop = dynamic(()=>import("@/components/NavBarTop"),{ssr:false})

@@ -1,4 +1,4 @@
-
+"use client"
 import dynamic from "next/dynamic";
 const NavBarTop = dynamic(()=>import("@/components/NavBarTop"),{ssr:false})
 const ProspectList = dynamic(()=>import("@/components/ProspectList"),{ssr:false})

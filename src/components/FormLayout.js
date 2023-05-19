@@ -2,9 +2,7 @@ import React, { useRef } from "react";
 import axios from "axios";
 import Image from 'next/image';
 import Bookmark from '@/img/save-instagram.png';
-import { BoltIcon } from "@heroicons/react/24/outline";
 import fileDownload from 'js-file-download'
-import Reload from '@/img/reload.png';
 import Copy from '@/img/copy.png';
 import Alert from '@mui/material/Alert';
 import { collection, addDoc } from "firebase/firestore";
@@ -24,7 +22,7 @@ function randomWord() {
   return `baruaAI-${word}`;
 }
 
-export default function FormLayout() {
+export default function FormLayout(props) {
   const contentFormRef = useRef(null);
 
   const scrollToContentForm = () => {
@@ -269,10 +267,10 @@ export default function FormLayout() {
         <div className="space-y-12 py-4">
           <div className="border-b border-white/10 pb-12">
             <h2 className="text-base font-semibold leading-7 text-white">
-              Email Generator
+              {props.type === 'demo' ? 'Experience the Power of Barua AI' : 'Email Generator'}
             </h2>
             <p className="mt-1 text-sm leading-6 text-gray-400">
-              We need a few detals before we can make you an email.
+              We need a few detals before we can make you an awesome message.
             </p>
 
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -313,8 +311,13 @@ export default function FormLayout() {
                     Offer 📢
                   </label>
                     <div className="mt-2 -space-y-px rounded-md shadow-sm">
-                    <div>
-                      <select
+                    {
+                      props.type === "demo"
+                      ?
+                      null
+                      :
+                      <div>
+                       <select
                         id="country"
                         name="country"
                         autoComplete="country-name"
@@ -323,7 +326,7 @@ export default function FormLayout() {
                           setProductDesc(e.target.value)
                         }}
                         className="relative block w-full rounded-none rounded-t-md border-0 bg-transparent py-1.5 text-gray-400 ring-1 ring-inset ring-gray-300 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      >
+                       >
                         <option>Use saved offer</option>
                         {
                           savedOffers.map((it,index) => {
@@ -334,10 +337,14 @@ export default function FormLayout() {
                         }
                       </select>
                     </div>
+                    }
                     <div>
                     <label htmlFor="postal-code" className="sr-only">
                       Write below
                     </label>
+                    <p className="mt-3 text-sm leading-6 text-gray-400">
+                    Describe what you're offering. Are you selling a product, a service, or maybe proposing a partnership? Your offer is the core of your email, so be clear and compelling.
+                    </p>
                     <textarea
                       onChange={(e) => {
                         setProductDesc(e.target.value)
@@ -347,7 +354,7 @@ export default function FormLayout() {
                       name="offer"
                       id="offer"
                       value={productDesc}
-                      className="relative block w-full rounded-none rounded-b-md border-0 bg-white/5 py-1.5 text-gray-100 ring-1 ring-inset ring-gray-300 placeholder:text-gray-600 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="relative block w-full mt-2 rounded-none rounded-b-md border-0 bg-white/5 py-1.5 text-gray-100 ring-1 ring-inset ring-gray-300 placeholder:text-gray-600 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                       placeholder="e.g My name is Brian and I am offering graphic design services that help..."
                     />
                   </div>
@@ -363,9 +370,10 @@ export default function FormLayout() {
                 </label>
                 <div className="col-span-full">
                   <p className="mt-3 text-sm leading-6 text-gray-400">
-                    Information about the target&apos;s industry&lsquo; role&lsquo; and pain
-                    points to ensure that the email content is relevant and
-                    personalized.
+                  Give us a snapshot of your prospect. What industry are they in? 
+                  What's their role? What challenges do they face? 
+                  The more detailed and precise your description, 
+                  the better the AI can tailor the message.
                   </p>
                   <div className="mt-2">
                     <textarea
@@ -375,7 +383,7 @@ export default function FormLayout() {
                         setTargetDesc(e.target.value);
                       }}
                       rows={4}
-                      className="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset placeholder:text-gray-600 ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                       defaultValue={""}
                       placeholder="e.g Shiv runs a bookkeeping agency that works with SMEs and freelancers. They have a website but it does not convert users as much as they want and does not show social proof."
                     />
@@ -401,9 +409,9 @@ export default function FormLayout() {
                     className="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 [&_*]:text-black"
                   >
                     <option value={'professional'}>Professional</option>
-                    <option value={'informal'} >Casual</option>
+                    <option value={'informal'} >Conversational</option>
                     <option value={'friendly'}>Friendly</option>
-                    <option value={'excited'} >Excited</option>
+                    <option value={'urgent'} >Urgent</option>
                     <option value={'persuasive'} >Persuasive</option>
                   </select>
                 </div>
@@ -454,17 +462,22 @@ export default function FormLayout() {
                   <button
                     type="button"
                     onClick={() => {
+                      if(props.type === "demo") {
+                        return
+                      }
                       saveEmail()
                     }}
                     className="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
                   >
-                     <Image
-                        src={Bookmark}
-                        width={24}
-                        height={24}
-                      alt="Save"
-                    />
-                    <span className="sr-only">Add list</span>
+                    <div className="tooltip" data-tip={props.type === "demo"?"Sign up to use this feature":"Save this message"}>
+                      <Image
+                          src={Bookmark}
+                          width={24}
+                          height={24}
+                        alt="Save"
+                      />
+                      <span className="sr-only">Add list</span>
+                    </div>
                   </button>
                   <button
                     type="button"
@@ -473,14 +486,16 @@ export default function FormLayout() {
                     }}
                     className="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
                   >
-                    <Image
-                      src={Copy}
-                      width={24}
-                      height={24}
-                      alt="rephrase"
-                      className="cursor-pointer"
-                    />
-                    <span className="sr-only">Download</span>
+                    <div className="tooltip" data-tip="Copy message" >
+                      <Image
+                        src={Copy}
+                        width={24}
+                        height={24}
+                        alt="rephrase"
+                        className="cursor-pointer"
+                      />
+                      <span className="sr-only">Download</span>
+                    </div>
                   </button>
                   <button
                     type="button"
@@ -507,17 +522,22 @@ export default function FormLayout() {
                   <button
                     type="button"
                     onClick={() => {
+                      if(props.type === "demo"){
+                        return
+                      }
                       setShowFineTuneModal(true)
                     }}
                     className="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
                   >
-                    <Image
-                      src={Finetune}
-                      width={24}
-                      height={24}
-                      alt="further instruction"
-                      className="cursor-pointer"
-                    />
+                    <div className="tooltip" data-tip={props.type==="demo"?"Sign up to fine-tune your message":"Modify message"} >
+                      <Image
+                        src={Finetune}
+                        width={24}
+                        height={24}
+                        alt="further instruction"
+                        className="cursor-pointer"
+                      />
+                    </div>
                   </button>
                 </div>
               </div>

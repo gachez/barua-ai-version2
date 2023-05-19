@@ -1,12 +1,12 @@
-const stats = [
-
-    { name: 'Saved emails', value: '3' },
-    { name: 'Saved offers', value: '0' },
-    { name: 'Credits', value: JSON.parse(localStorage.getItem('user'))?.creditsAvailable },
-    { name: 'Plan', value: 'Basic' },
-  ]
+import React from 'react'
   
-  export default function Stats() {
+  export default function Stats(props) {
+    const [stats, setStats] = React.useState([
+      { name: 'Saved emails', value: `${props?.userEmails?.length}` },
+      { name: 'Saved offers', value: `${props?.offers?.length}` },
+      { name: 'Credits', value: JSON.parse(localStorage.getItem('user'))?.creditsAvailable },
+      { name: 'Plan', value: JSON.parse(localStorage.getItem('user')).isSubscribed?'Premium':'Basic' },
+    ])
     return (
       <div className="bg-gray-900">
         <div className="mx-auto max-w-7xl">

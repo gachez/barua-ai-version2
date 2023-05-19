@@ -2,44 +2,42 @@ import { CheckIcon } from '@heroicons/react/20/solid'
 
 const tiers = [
   {
-    name: 'Hobby',
-    id: 'tier-hobby',
+    name: "Basic Plan",
+    id: 'tier-basic',
     href: '#',
-    priceMonthly: '$49',
-    description: 'Modi dolorem expedita deleniti. Corporis iste qui inventore pariatur adipisci vitae.',
-    features: ['5 products', 'Up to 1,000 subscribers', 'Basic analytics', '48-hour support response time'],
+    priceMonthly: '$0',
+    description: "Our Basic Plan is designed to let you experience the power of Barua AI without any commitment. It's free forever, letting you pay as you go.",
+    features: ['Pay as You Go', 'Fine-Tune Feature Access', 'Save Up To 100 Emails', 'Add Up To 100 Prospects'],
   },
   {
-    name: 'Team',
-    id: 'tier-team',
+    name: 'Premium Plan',
+    id: 'tier-premium',
     href: '#',
-    priceMonthly: '$79',
-    description: 'Explicabo quo fugit vel facere ullam corrupti non dolores. Expedita eius sit sequi.',
+    priceMonthly: '$39',
+    description: "Take your email outreach to the next level with our Premium Plan. Unlock an array of powerful features",
     features: [
-      'Unlimited products',
-      'Unlimited subscribers',
-      'Advanced analytics',
-      '1-hour, dedicated support response time',
-      'Marketing automations',
+      '500 Credits Every Month',
+      'Access to All Features',
+      'Save Unlimited Emails',
+      'Add Unlimited Prospects',
+      'Priority Email Support',
     ],
   },
 ]
 
 export default function Pricing() {
   return (
-    <div className="isolate overflow-hidden bg-gray-900">
+    <div id="pricing" className="isolate overflow-hidden bg-gray-900">
       <div className="mx-auto max-w-7xl px-6 pb-96 pt-24 text-center sm:pt-32 lg:px-8">
         <div className="mx-auto max-w-4xl">
           <h2 className="text-base font-semibold leading-7 text-indigo-400">Pricing</h2>
-          <p className="mt-2 text-4xl font-bold tracking-tight text-white sm:text-5xl">
-            The right price for you, <br className="hidden sm:inline lg:hidden" />
-            whoever you are
-          </p>
+          <h1 className="mt-2 text-4xl font-bold tracking-tight text-white sm:text-5xl">
+          Choose your plan and start crafting compelling, personalized sales emails
+          </h1>
         </div>
         <div className="relative mt-6">
           <p className="mx-auto max-w-2xl text-lg leading-8 text-white/60">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit numquam eligendi quos odit doloribus
-            molestiae voluptatum.
+          Whether you're a small business just starting with email marketing or a large enterprise looking to optimize your outreach, Barua AI has a plan for you. Choose from our affordable Basic and Premium plans and start generating compelling sales emails today.
           </p>
           <svg
             viewBox="0 0 1208 1024"
@@ -91,20 +89,7 @@ export default function Pricing() {
                   </a>
                 </div>
               ))}
-              <div className="flex flex-col items-start gap-x-8 gap-y-6 rounded-3xl p-8 ring-1 ring-gray-900/10 sm:gap-y-10 sm:p-10 lg:col-span-2 lg:flex-row lg:items-center">
-                <div className="lg:min-w-0 lg:flex-1">
-                  <h3 className="text-lg font-semibold leading-8 tracking-tight text-indigo-600">Discounted</h3>
-                  <p className="mt-1 text-base leading-7 text-gray-600">
-                    Dolor dolores repudiandae doloribus. Rerum sunt aut eum. Odit omnis non voluptatem sunt eos nostrum.
-                  </p>
-                </div>
-                <a
-                  href="#"
-                  className="rounded-md px-3.5 py-2 text-sm font-semibold leading-6 text-indigo-600 ring-1 ring-inset ring-indigo-200 hover:ring-indigo-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                >
-                  Buy discounted license <span aria-hidden="true">&rarr;</span>
-                </a>
-              </div>
+          
             </div>
           </div>
         </div>

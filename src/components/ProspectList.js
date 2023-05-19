@@ -2,14 +2,19 @@ import User from '@/img/user.png'
 import Image from 'next/image'
 import React, { useEffect } from 'react'
 import { db } from '@/firebase.config'; 
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
 import EmailModal from './EmailModal';
 import Link from 'next/link';
 import { LinearProgress, Alert } from '@mui/material';
+import AddProspectModal from './AddProspectModal';
+import ProspectModal from './ProspectModal';
 
 export default function ProspectList() {
     const [showModal, setShowModal] = React.useState(false)
-    const [selectedEmail, setSelectedEmail] = React.useState('')
+    const [showAddProspectListModal, setShowAddProspectListModal] = React.useState(false)
+    const [prospectName, setProspectName] = React.useState('')
+    const [prospectDescription, setProspectDescription] = React.useState('')
+    const [selectedProspect, setSelectedProspect] = React.useState()
     const [userEmails, setUserEmails] = React.useState([])
     const [emailRefs, setEmailRefs] = React.useState([])
     const [emailObjs, setEmailObjs] = React.useState([])
@@ -24,14 +29,14 @@ export default function ProspectList() {
       }, delay)
     }
 
-    async function getEmails(){
+    async function getProspects(){
         setLoadingBar(true)
         const userEmail = JSON.parse(localStorage.getItem('user'))?.email
         try {
             let emailObjs = []
             let emailsFound = []
             let emailRefsL = []
-        const q = query(collection(db, "userEmails"), where("userId", "==", userEmail));
+        const q = query(collection(db, "userProspects"), where("userEmail", "==", userEmail));
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
           emailsFound.push(doc.data())
@@ -57,8 +62,35 @@ export default function ProspectList() {
         }
       }
 
+    
+      async function saveProspect(){
+        setLoadingBar(true)
+        try {
+        const docRef = await addDoc(collection(db, "userProspects"), {
+          prospectName: prospectName,
+          prospectDescription: prospectDescription,
+          userEmail: JSON.parse(localStorage.getItem('user'))?.email
+        });
+        setShowAddProspectListModal(false)
+        setShowAlert(true)
+        setAlertSeverity('success')
+        setAlertText("Prospect added succesfully: ", docRef.id);
+        closeAlert()
+        getProspects()
+        setLoadingBar(false)
+        } catch (error) {
+          console.error(error)
+          setShowAddProspectListModal(false)
+          setShowAlert(true)
+          setAlertSeverity('error')
+          setAlertText("Oops! Error occurred add prospect");
+          closeAlert()
+          setLoadingBar(false)
+        }
+      }
+
     useEffect(() => {
-        getEmails()
+        getProspects()
         // eslint-disable-next-line react-hooks/exhaustive-deps        
     }, [])
 
@@ -74,6 +106,13 @@ export default function ProspectList() {
       }
       <div className="mx-auto max-w-7xl">
         <div className="bg-gray-900 py-10">
+        {
+            showAlert
+            ?
+            <Alert style={{zIndex: 99}} severity={alertSeverity}>{alertText}</Alert>
+            :
+            null
+          }
           <div className="px-4 sm:px-6 lg:px-8">
             <div className="sm:flex sm:items-center">
               <div className="sm:flex-auto">
@@ -84,12 +123,14 @@ export default function ProspectList() {
               </div>
               <div className="flex mt-4 sm:ml-16 sm:mt-0">
                 <button
+                  onClick={(e) => {
+                    e.preventDefault()
+                    setShowAddProspectListModal(true)
+                  }}
                   type="button"
-                  className="block rounded-md bg-green-600 px-3 py-2 text-center mx-4 text-sm font-semibold text-white hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                  className="block rounded-md bg-green-600 px-3 py-2 text-center mx-4 text-sm font-semibold text-white hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
                 >
-                  <Link href={"/app/generator"}>
                   Add +
-                  </Link>
                 </button>
                 <button
                   type="button"
@@ -119,12 +160,12 @@ export default function ProspectList() {
                       {userEmails.map((email,index) => (
                         <tr className='cursor-pointer' key={index} onClick={() => {
                           setShowModal(true)
-                          setSelectedEmail(email)
+                          setSelectedProspect(email)
                         }} >
                           <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-white sm:pl-0">
-                            {email?.targetName}
+                            {email?.prospectName}
                           </td>
-                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-300">{email?.email?.slice(0,80)}...</td>
+                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-300">{email?.prospectDescription?.slice(0,80)}...</td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-300">      
                           <button
                             type="button"
@@ -146,9 +187,28 @@ export default function ProspectList() {
     {
         showModal
         ?
-        <EmailModal setShowModal={setShowModal} selectedEmail={selectedEmail} setSelectedEmail={setSelectedEmail} />
+        <ProspectModal setShowModal={setShowModal} selectedProspect={selectedProspect} setSelectedProspect={setSelectedProspect} />
         :
         null
+    }
+    {
+      showAddProspectListModal
+      ?
+      <AddProspectModal 
+        prospectName={prospectName}
+        prospectDescription={prospectDescription}
+        setProspectName={setProspectName}
+        setProspectDescription={setProspectDescription}
+        open={showAddProspectListModal}
+        setOpen={setShowAddProspectListModal}
+        loadingBar={loadingBar}
+        showAlert={showAlert}
+        alertSeverity={alertSeverity}
+        alertText={alertText}
+        saveProspect={saveProspect}
+      />
+      :
+      null
     }
     </>
   )

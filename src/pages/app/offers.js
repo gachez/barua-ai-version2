@@ -1,9 +1,11 @@
+"use client"
 import dynamic from "next/dynamic";
 
 
 const NavBarTop = dynamic(()=>import("@/components/NavBarTop"))
 const Footer = dynamic(()=>import("@/components/Footer"))
 const OfferList = dynamic(()=>import("@/components/OfferList"))
+
 
 export default function Offers() {
     return(

@@ -1,27 +1,18 @@
-import React, { Fragment, useRef, useState } from 'react'
-import { Disclosure, Menu, Transition, Dialog } from '@headlessui/react'
+"use client"
+import React, { Fragment, useState } from 'react'
+import { Menu, Transition, Dialog } from '@headlessui/react'
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import Logo from '@/img/logo-black.png'
 import Avatar from '@/img/avatar.png'
-import { getSignedInUserCookie } from '@/utils';
 import {
   Bars3Icon,
-  CalendarIcon,
-  DocumentDuplicateIcon,
   FolderIcon,
   HomeIcon,
-  UsersIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
-import { ChevronDownIcon, BoltIcon,BookmarkIcon, CodeBracketIcon , Square3Stack3DIcon} from '@heroicons/react/20/solid'
+import { ChevronDownIcon, BoltIcon,BookmarkIcon, CodeBracketIcon , Square3Stack3DIcon, BanknotesIcon} from '@heroicons/react/20/solid'
 import Link from 'next/link';
-import { Bookmark } from '@mui/icons-material';
-const isCurrentPage = (text) => {
-  return window.location.href.includes(text)
-}
-
-
 
 export default function NavBarTop(props) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -42,7 +33,7 @@ export default function NavBarTop(props) {
     { name: 'Email generator', href: '/app/generator', icon: CodeBracketIcon, current: asPath.includes('generator') },
     { name: 'Saved emails', href: '/app/emails', icon: BookmarkIcon, current: asPath.includes('emails') },
     { name: 'Offers', href: '/app/offers', icon: FolderIcon, current: asPath.includes('offers') },
-    { name: 'Database', href: '#', icon: Square3Stack3DIcon, current: asPath.includes('database')},
+    { name: 'Database', href: '/app/database', icon: Square3Stack3DIcon, current: asPath.includes('database')},
   ]
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -204,12 +195,28 @@ export default function NavBarTop(props) {
 
               <div className="flex items-center gap-x-4 lg:gap-x-6">
                 <button
+                  onClick={() => {
+                    props.setOpen(true)
+                  }}
                   type="button"
-                  className="inline-flex items-center gap-x-2 rounded-md bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                >
-                  <BoltIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-                  Upgrade
+                  className="inline-flex items-center gap-x-1.5 rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  >
+                  <BanknotesIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
+                  Buy credits
                 </button>
+                {
+                  JSON.parse(window.localStorage.getItem('user'))?.isSubscribed
+                  ?
+                  null
+                  :
+                  <button
+                  type="button"
+                  className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  >
+                    <BoltIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
+                    Upgrade
+                  </button>
+                }
                 {/* Separator */}
                 <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-900/10" aria-hidden="true" />
 
@@ -256,7 +263,7 @@ export default function NavBarTop(props) {
                           )}
                         </Menu.Item>
                       ))}
-                    </Menu.Items>button
+                    </Menu.Items>
                   </Transition>
                 </Menu>
               </div>

@@ -1,11 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import LinearProgress from '@mui/material/LinearProgress';
-import Copy from '@/img/copy.png';
-import Image from 'next/image';
 import EmailDetails from './EmailDetails';
 
 const style = {
@@ -21,28 +16,8 @@ const style = {
 };
 
 export default function EmailModal(props) {
-  const [open, setOpen] = React.useState(false);
-  const [showAlert, setShowAlert] = React.useState(false)
   const [isFormReady, setIsFormReady] = React.useState(false);
-  const [showFormAlert, setShowFormAlert] = React.useState(false)
 
-  function closeAlert(delay=3500){
-    setTimeout(() => { 
-      setShowAlert(false) 
-      setShowFormAlert(false)
-    }, delay)
-  }
-
-  async function copyTextFromTextarea() {
-    const textarea = document.getElementById('contentForm');
-    try {
-      await navigator.clipboard.writeText(textarea.value);
-      textarea.select()
-    } catch (error) {
-      console.error('Error copying text:', error);
-    }
-  }
-  
   React.useEffect(() => {
     setIsFormReady(true);
   }, [])

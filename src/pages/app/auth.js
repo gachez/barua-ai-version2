@@ -1,3 +1,4 @@
+"use client"
 import LogoBlack from '@/img/logo-black.png'
 import Image from 'next/image'
 import React from 'react'
@@ -9,7 +10,10 @@ import { db } from '@/firebase.config';
 import { LinearProgress } from '@mui/material';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import Google from '@/img/search.png';
 import Footer from '@/components/Footer';
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+
 
 export default function Auth() {
   const router = useRouter();
@@ -42,6 +46,34 @@ export default function Auth() {
           console.error("Error adding user: ", e);
           setIsLoading(false)
         }
+  }
+
+  async function signInWithGoogle(){
+    const auth = getAuth();
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then(async (result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+        // IdP data available using getAdditionalUserInfo(result)
+        // ...
+        console.log('XXXX ', user)
+        // Signed in 
+        setIsLoading(false)
+        setSignedInUserCookie(user.email)
+        router.push('/app/dashboard')
+      }).catch((error) => {
+        // Handle Errors here.
+        const errorMessage = error.message;
+     
+        setShowAlert(true)
+        setAlertSeverity('error')
+        setAlertText('Oops! '+errorMessage)
+        console.log(errorMessage)
+      });
   }
 
   function signIn(){
@@ -270,6 +302,33 @@ export default function Auth() {
                   </form>
                 )
             }
+              <div>
+              <div className="relative mt-10">
+                <div className="absolute inset-0 flex items-center" aria-hidden="true">
+                  <div className="w-full border-t border-gray-200" />
+                </div>
+                <div className="relative flex justify-center text-sm font-medium leading-6">
+                  <span className="bg-gray-950 px-6 text-white">Or continue with</span>
+                </div>
+              </div>
+
+              <div className="mt-6 grid grid-cols-1 gap-4">
+                <div
+                  href="#"
+                  onClick={() => {
+                    signInWithGoogle()
+                  }}
+                  className="cursor-pointer flex w-full items-center justify-center gap-3 rounded-md bg-[#24292F] px-3 py-1.5 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#24292F]"
+                >
+                  <Image
+                   src={Google}
+                   height={20}
+                   width={20}
+                  />
+                  <span className="text-sm font-semibold leading-6">Google</span>
+                </div>
+              </div>
+            </div>
             <p className="mt-10 text-center text-sm text-gray-400">
               {isSignIn?'Not a member?':'Already a member?'}{' '}
               <div onClick={() => {
