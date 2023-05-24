@@ -181,6 +181,9 @@ export default function NavBarTop(props) {
                               <li key={item.name}>
                                 <Link
                                   href={item.href}
+                                  onClick={() => {
+                                    props.setNavLoading(true)
+                                  }}
                                   className={classNames(
                                     item.current
                                       ? 'bg-gray-800 text-white'
@@ -225,6 +228,9 @@ export default function NavBarTop(props) {
                       <li key={item.name}>
                         <Link
                           href={item.href}
+                          onClick={() => {
+                            props.setNavLoading(true)
+                          }}
                           className={classNames(
                             item.current
                               ? 'bg-gray-800 text-white'
