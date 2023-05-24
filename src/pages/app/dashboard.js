@@ -6,6 +6,7 @@ import { getSignedInUserCookie } from "@/utils";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import BuyCreditsModal from "@/components/BuyCreditModal";
+import { LinearProgress } from "@mui/material";
 const NavBarTop = dynamic(()=>import("@/components/NavBarTop"))
 const DashboardComponent = dynamic(() => import("@/components/Dashboard"))
 
@@ -17,6 +18,7 @@ export default function Dashboard() {
   const [userOffers, setUserOffers] = React.useState([])
   const [userEmails, setUserEmails] = React.useState([])
   const [open, setOpen] = React.useState(false)
+  const [isLoading, setIsLoading] = React.useState(false)
 
     async function getUser(){
       try {
@@ -90,14 +92,23 @@ export default function Dashboard() {
 
     return(
         <>
-        <NavBarTop signedInUser={signedInUser} setOpen={setOpen} mainComponent={<DashboardComponent />} />
-          {
-            open
-            ?
-            <BuyCreditsModal setOpen={setOpen} open={open} />
-            :
-            null
-          }
+        {
+          isLoading
+          ?
+          <LinearProgress />
+          :
+          null
+        }
+        <div style={{opacity: isLoading ? 0.7 : 1}} >
+          <NavBarTop setNavLoading={setIsLoading} navLoading={isLoading} signedInUser={signedInUser} setOpen={setOpen} mainComponent={<DashboardComponent />} />
+            {
+              open
+              ?
+              <BuyCreditsModal setOpen={setOpen} open={open} />
+              :
+              null
+            }
+        </div>
         </>
     )
 }
