@@ -10,6 +10,7 @@ import { db } from '@/firebase.config';
 import { LinearProgress } from '@mui/material';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import Alert from '@mui/material/Alert'
 import Google from '@/img/search.png';
 import Footer from '@/components/Footer';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
@@ -45,6 +46,10 @@ export default function Auth() {
         } catch (e) {
           console.error("Error adding user: ", e);
           setIsLoading(false)
+          setShowAlert(true)
+          setAlertSeverity('error')
+          setAlertText('Oops! error occurred creating a user')
+          closeAlert()
         }
   }
 
@@ -58,9 +63,6 @@ export default function Auth() {
         const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
-        // IdP data available using getAdditionalUserInfo(result)
-        // ...
-        console.log('XXXX ', user)
         // Signed in 
         setIsLoading(false)
         setSignedInUserCookie(user.email)
@@ -68,16 +70,22 @@ export default function Auth() {
       }).catch((error) => {
         // Handle Errors here.
         const errorMessage = error.message;
-     
+        setIsLoading(false)
         setShowAlert(true)
         setAlertSeverity('error')
         setAlertText('Oops! '+errorMessage)
         console.log(errorMessage)
+        closeAlert()
       });
   }
 
+  function closeAlert(delay = 3500) {
+    setTimeout(() => {
+      setShowAlert(false)
+    }, delay)
+  }
+
   function signIn(){
-    console.log('sign in called', email, password)
     setIsLoading(true)
     signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
@@ -90,9 +98,11 @@ export default function Auth() {
           const errorCode = error.code;
           const errorMessage = error.message;
           console.log(errorCode, errorMessage)
+          setIsLoading(false)
           setShowAlert(true)
           setAlertSeverity('error')
           setAlertText('Oops! '+errorMessage)
+          closeAlert()
       })
       return
   }
@@ -111,9 +121,11 @@ export default function Auth() {
           const errorCode = error.code;
           const errorMessage = error.message;
           console.log(errorCode, errorMessage)
+          setIsLoading(false)
           setShowAlert(true)
           setAlertSeverity('error')
           setAlertText('Oops! '+errorMessage)
+          closeAlert()
       })
       return
   }
@@ -126,15 +138,24 @@ export default function Auth() {
         :
         null
       }
+      {
+        showAlert
+        ?
+        <Alert style={{zIndex: 99}} severity={alertSeverity}>{alertText}</Alert>
+        :
+        null
+      }
         <div style={{opacity: isLoading?0.1:1}} className="flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-            <Image
-              className="mx-auto rounded-full"
-              src={LogoBlack}
-              alt="Barua AI Email generator sell anything easily"
-              width={64}
-              height={64}
-            />
+            <Link href={"/"} >
+              <Image
+                className="mx-auto rounded-full"
+                src={LogoBlack}
+                alt="Barua AI Email generator sell anything easily"
+                width={64}
+                height={64}
+              />
+            </Link>
             <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white">
               Sign in to your account
             </h2>
