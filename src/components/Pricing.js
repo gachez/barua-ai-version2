@@ -1,10 +1,11 @@
 import { CheckIcon } from '@heroicons/react/20/solid'
+import Link from 'next/link'
 
 const tiers = [
   {
     name: "Basic Plan",
     id: 'tier-basic',
-    href: '#',
+    href: '/app/auth',
     priceMonthly: '$0',
     description: "Our Basic Plan is designed to let you experience the power of Barua AI without any commitment. It's free forever, letting you pay as you go.",
     features: ['Pay as You Go', 'Fine-Tune Feature Access', 'Save Up To 100 Emails', 'Add Up To 100 Prospects'],
@@ -12,7 +13,7 @@ const tiers = [
   {
     name: 'Premium Plan',
     id: 'tier-premium',
-    href: '#',
+    href: '/app/auth',
     priceMonthly: '$39',
     description: "Take your email outreach to the next level with our Premium Plan. Unlock an array of powerful features",
     features: [
@@ -80,13 +81,12 @@ export default function Pricing() {
                       ))}
                     </ul>
                   </div>
-                  <a
+                  <Link
                     href={tier.href}
-                    aria-describedby={tier.id}
                     className="mt-8 block rounded-md bg-indigo-600 px-3.5 py-2 text-center text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                   >
                     Get started today
-                  </a>
+                  </Link>
                 </div>
               ))}
           
