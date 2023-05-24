@@ -8,7 +8,6 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import { getSignedInUserCookie } from "@/utils";
 import dynamic from "next/dynamic";
 const MenuGrid = dynamic(()=>import("@/components/MenuGrid"))
-const Stats = dynamic(() => import("@/components/Stats"))
 
 export default function DashboardComponent(){
     const router = useRouter();

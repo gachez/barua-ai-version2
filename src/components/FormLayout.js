@@ -8,10 +8,11 @@ import Alert from '@mui/material/Alert';
 import { collection, addDoc } from "firebase/firestore";
 import Config from '@/config';
 import { db } from '@/firebase.config';
-import { query, where, getDocs } from "firebase/firestore";
+import { query, where, getDocs, updateDoc, doc } from "firebase/firestore";
 import LinearProgress from '@mui/material/LinearProgress';
 import Finetune from '@/img/magic-wand.png'
 import TextAreaModal from "./TextAreaModal";
+import { getSignedInUserCookie } from "@/utils";
 
 function randomWord() {
   const letters = "abcdefghijklmnopqrstuvwxyz";
@@ -55,6 +56,7 @@ export default function FormLayout(props) {
   const [showFineTuneModal, setShowFineTuneModal] = React.useState(false)
   const [instruction, setInstruction] = React.useState('')
   const [savedProspects, setSavedProspects] = React.useState([])
+  const [userDocumentRef,setUserDocumentRef] = React.useState('')
 
   function closeAlert(delay = 3500) {
     setTimeout(() => {
@@ -169,10 +171,22 @@ export default function FormLayout(props) {
     }
   }
 
+  async function editUserCredits() {
+    const userRef = doc(db, "users", userDocumentRef)
+    try {
+      await updateDoc(userRef, {
+        creditsAvailable: JSON.parse(localStorage.getItem('user')).creditsAvailable - 1
+      } );
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   React.useEffect(() => {
     setIsFormReady(true);
     getOffers()
     getProspects()
+    getUser()
   }, [])
 
 
@@ -201,6 +215,8 @@ export default function FormLayout(props) {
         // Extract the data from the response
         const data = response.data;
         console.log(data);
+        getUser();
+        editUserCredits()
         const completions = data.split(' ');
         // Stream words one by one
         completions.forEach((word, index) => {
@@ -249,6 +265,7 @@ export default function FormLayout(props) {
         // Extract the data from the response
         const data = response.data;
         console.log(data);
+        editUserCredits();
         const completions = data.split(' ');
         // Stream words one by one
         completions.forEach((word, index) => {
@@ -256,6 +273,7 @@ export default function FormLayout(props) {
             setGeneratedEmail((prevText) => prevText + ' ' + word);
           }, index * 50); // Adjust the delay (in ms) between words as needed
         });
+        getUser();
         setLoadingBar(false);
       })
       .catch((error) => {
@@ -267,6 +285,20 @@ export default function FormLayout(props) {
         setShowAlert(true)
         closeAlert()
       })
+  }
+
+  async function getUser(){
+    try {
+    const q = query(collection(db, "users"), where("email", "==", getSignedInUserCookie()));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      window.localStorage.setItem('user',JSON.stringify(doc.data()))
+      setUserDocumentRef(`${doc.id}`)
+    });
+    } catch (error) {
+      console.error(error)
+      alert(error)
+    }
   }
 
   return (
@@ -318,13 +350,13 @@ export default function FormLayout(props) {
                                 setTargetName(name)
                                 setTargetDesc(desc)
                               }}
-                              className="relative block w-full rounded-none rounded-t-md border-0 bg-transparent py-1.5 text-gray-400 ring-1 ring-inset ring-gray-300 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                              className="relative cursor-pointer block w-full rounded-none rounded-t-md border-0 bg-transparent py-1.5 text-gray-400 ring-1 ring-inset ring-gray-300 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             >
-                              <option>Use saved prospect</option>
+                              <option className="cursor-pointer" >Use saved prospect</option>
                               {
                                 savedProspects.map((it, index) => {
                                   return (
-                                    <option key={index} value={`${it?.prospectName}-${it?.prospectDescription}`} className="text-gray-900">{it?.prospectName}</option>
+                                    <option key={index} value={`${it?.prospectName}-${it?.prospectDescription}`} className="cursor-pointer text-gray-900">{it?.prospectName}</option>
                                   )
                                 })
                               }
@@ -449,7 +481,6 @@ export default function FormLayout(props) {
                   <div className="mt-2">
                     <select
                       id="tone"
-                      defaultValue={'professional'}
                       name="tone"
                       onChange={(e) => {
                         setMood(e.value)
@@ -457,6 +488,7 @@ export default function FormLayout(props) {
                       autoComplete="country-name"
                       className="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 [&_*]:text-black"
                     >
+                      <option className="cursor-pointer" >Choose a tone</option>
                       <option value={'professional'}>Professional</option>
                       <option value={'informal'} >Conversational</option>
                       <option value={'friendly'}>Friendly</option>
