@@ -1,3 +1,4 @@
+"use client"
 import { Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import CreditOptions from './CreditOptions'
@@ -63,7 +64,7 @@ export default function BuyCreditsModal(props) {
       .then(res => {
           setPaymentURI(res.data.redirect_url)
           // setMerchantID(res.data.merchant_reference)
-          localStorage.setItem('merchantID',res.data.merchant_reference)
+          typeof window !== "undefined" ? localStorage.setItem('merchantID',res.data.merchant_reference) : null
           setShowPaymentModal(true)
           makeOrder({
               merchantID:res.data.merchant_reference,
@@ -74,7 +75,7 @@ export default function BuyCreditsModal(props) {
               currency: "USD",
               credits: JSON.parse(selected.price.replace('$', '')) * 10,
               created:  `${new Date()}`,
-              accountNumber: localStorage.getItem('userAccount')
+              accountNumber: typeof window !== "undefined" ? localStorage.getItem('userAccount') : null
           }).then(() => {
               sendEmail(JSON.parse(selected.price.replace('$', '')),JSON.parse(selected.price.replace('$', '')) * 10)
               setShowPaymentModal(true)

@@ -25,9 +25,9 @@ export default function Dashboard() {
       querySnapshot.forEach((doc) => {
         setSignedInUser(doc.data())
         console.log(doc.data())
-        window.localStorage.setItem('user',JSON.stringify(doc.data()))
+        typeof window !== "undefined" ? window.localStorage.setItem('user',JSON.stringify(doc.data())) : null
         setDocum(`${doc.id}`)
-        window.localStorage.setItem('userAccount', doc.data().accountNumber)
+        typeof window !== "undefined" ? window.localStorage.setItem('userAccount', doc.data().accountNumber) : null
       });  
       } catch (error) {
         console.log(error)

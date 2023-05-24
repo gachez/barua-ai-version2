@@ -48,7 +48,7 @@ export default function NavBarTop(props) {
               "email_address": getSignedInUserCookie(),
               "phone_number": null,
               "country_code": "",
-              "first_name": JSON.parse(localStorage.getItem('user')).name,
+              "first_name": typeof window !== "undefined" ? JSON.parse(localStorage.getItem('user')).name : null,
               "middle_name": "",
               "last_name": "",
               "line_1": "",
@@ -266,7 +266,7 @@ export default function NavBarTop(props) {
               <div className="flex items-center gap-x-4 lg:gap-x-6">
                 <div className='flex justify-center items-center'>
                   <CircleStackIcon width={18} height={18} />
-                  <span className='px-1'>{JSON.parse(localStorage.getItem('user'))?.creditsAvailable} Credits</span>
+                  <span className='px-1'>{typeof window !== "undefined" ? JSON.parse(localStorage.getItem('user'))?.creditsAvailable : ''} Credits</span>
                 </div>
                 <button
                   onClick={() => {
@@ -279,7 +279,8 @@ export default function NavBarTop(props) {
                   Buy credits
                 </button>
                 {
-                  JSON.parse(window.localStorage.getItem('user'))?.isSubscribed
+                  typeof window !== "undefined" ? 
+                  (JSON.parse(window.localStorage.getItem('user'))?.isSubscribed
                   ?
                   null
                   :
@@ -292,10 +293,12 @@ export default function NavBarTop(props) {
                   >
                     <BoltIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
                     Upgrade
-                  </button>
+                  </button>)
+                  :
+                  null
                 }
                 {
-                  JSON.parse(window.localStorage.getItem('user'))?.isSubscribed
+                  typeof window !== "undefined" ? JSON.parse(window.localStorage.getItem('user'))?.isSubscribed : null
                   ?
                   <div className='flex justify-center items-center'>
                     <BoltIcon width={18} height={18} />
