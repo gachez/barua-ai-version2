@@ -1,22 +1,22 @@
 "use client"
-import Footer from "@/components/Footer";
+import React from "react";
 import dynamic from "next/dynamic";
 const NavBarTop = dynamic(()=>import("@/components/NavBarTop"),{ssr:false})
 const EmailList = dynamic(()=>import("@/components/EmailList"),{ssr:false})
+const BuyCreditsModal = dynamic(() => import("@/components/BuyCreditModal"), {ssr: false})
 
 export default function Emails() {
+    const [open, setOpen] = React.useState(false)
     return(
         <>
-            <NavBarTop />
-            <main className="flex-col">
-            <div className="mx-auto max-w-7xl h-screen py-6 sm:px-6 lg:px-8">
-            {/* Your content */}
-                {/* Secondary navigation */}
-
-                {/* Stats */}
-                <EmailList />
-                </div>
-            </main>
+            <NavBarTop mainComponent={<EmailList />} setOpen={setOpen} />
+            {
+            open
+            ?
+            <BuyCreditsModal setOpen={setOpen} open={open} />
+            :
+            null
+            }
         </>
     )
 }

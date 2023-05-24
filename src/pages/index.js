@@ -1,3 +1,4 @@
+'use client'
 import { useState } from 'react'
 import { Dialog } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
@@ -23,7 +24,7 @@ const navigation = [
   { name: 'Blog', href: '#' },
 ]
 
-export default function Home() {
+export default function SuccessPayment() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (

@@ -3,8 +3,12 @@ import { Dialog, Transition } from '@headlessui/react'
 import CreditOptions from './CreditOptions'
 import {BanknotesIcon} from '@heroicons/react/20/solid'
 import { addDoc, collection } from 'firebase/firestore'
+import { LinearProgress } from '@mui/material'
 import { db } from '@/firebase.config';
-import { getSignedInUserCookie } from '@/utils'
+import { getSignedInUserCookie, returnOrderEmail } from '@/utils'
+import PaymentUI from './PaymentModal'
+import axios from 'axios'
+import Config from '@/config'
 
 const plans = [
   { name: 'Starter Bundle', description: "You'll receive 100 credits, giving you the freedom to explore our AI tool and discover its potential.", price: '$10' },
@@ -16,8 +20,10 @@ const plans = [
 export default function BuyCreditsModal(props) {
 
   const [selected, setSelected] = useState(plans[0])
+  const [linearDisplay, setLinearDisplay] = useState(false)
   const [showPaymentModal, setShowPaymentModal] = useState(false)
   const cancelButtonRef = useRef(null)
+  const [paymentURI, setPaymentURI] = useState('')
 
   async function makeOrder (details){
     try {
@@ -28,23 +34,7 @@ export default function BuyCreditsModal(props) {
       }
     }
 
-    function determineAmount(val,numCredits){
-        if(val === 'standard'){
-            return 15
-        }
-        if(val === 'premium'){
-            return 50
-        }
-        return numCredits * 0.1
-    }
-
-     function startPayment(numOfCredits,subscription=false,subscriptionType='custom'){
-      setOpen(true)
-      setOpenPM(false)
-      setBackdropText('Please wait..')
-      setCredtsT(numOfCredits)
-      setPaymentURI(setCreditBuy(false))
-      setSubscriptionType(subscriptionType)
+     function startPayment(){
       const payment = {
         "order":
             {
@@ -75,31 +65,26 @@ export default function BuyCreditsModal(props) {
           // setMerchantID(res.data.merchant_reference)
           localStorage.setItem('merchantID',res.data.merchant_reference)
           setShowPaymentModal(true)
-          setOpen(true)
-          setBackdropText('Please wait..')
           makeOrder({
               merchantID:res.data.merchant_reference,
-              amount: determineAmount(subscriptionType,numOfCredits),
+              amount: JSON.parse(selected.price.replace('$', '')),
               description: 'Buy credits',
               user: getSignedInUserCookie(),
               status: 'incomplete',
               currency: "USD",
-              credits:  numOfCredits,
+              credits: JSON.parse(selected.price.replace('$', '')) * 10,
               created:  `${new Date()}`,
               accountNumber: localStorage.getItem('userAccount')
           }).then(() => {
-              setOpen(false)
-             sendEmail(determineAmount(subscriptionType,numOfCredits),numOfCredits)
+              sendEmail(JSON.parse(selected.price.replace('$', '')),JSON.parse(selected.price.replace('$', '')) * 10)
               setShowPaymentModal(true)
           })
       })
       .catch(err => {
           console.error(err)
-          setSnackbarOpen(true)
       })
       .finally(() => {
-          setLinearDisplayPremium('none')
-          setOpen(false)
+        console.log('m')
       })
   }
   function sendEmail(amount,credits,){
@@ -113,15 +98,16 @@ export default function BuyCreditsModal(props) {
         console.log('email sent')
     })
     .catch(err => {
-        setSnackbarOpen(true)
+      console.log(err)
     })
   }
 
   return (
+    <>
     <Transition.Root show={props.open} as={Fragment}>
       <Dialog as="div" className="relative z-10" initialFocus={cancelButtonRef} onClose={props.setOpen}>
         <Transition.Child
-          as={Fragment}
+          as="div"
           enter="ease-out duration-300"
           enterFrom="opacity-0"
           enterTo="opacity-100"
@@ -135,7 +121,7 @@ export default function BuyCreditsModal(props) {
         <div className="fixed inset-0 z-10 overflow-y-auto">
           <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
             <Transition.Child
-              as={Fragment}
+              as="div"
               enter="ease-out duration-300"
               enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               enterTo="opacity-100 translate-y-0 sm:scale-100"
@@ -143,6 +129,13 @@ export default function BuyCreditsModal(props) {
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
+              {
+                linearDisplay
+                ?
+                <LinearProgress />
+                :
+                null
+              }
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
               <div>
                   <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
@@ -166,6 +159,7 @@ export default function BuyCreditsModal(props) {
                     className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 sm:col-start-2"
                     onClick={() => {
                       console.log('You have selected the ', selected.name)
+                      startPayment()
                     }}
                   >
                     Purchase
@@ -185,5 +179,13 @@ export default function BuyCreditsModal(props) {
         </div>
       </Dialog>
     </Transition.Root>
+    {
+      showPaymentModal
+      ?
+      <PaymentUI paymentURI={paymentURI} selectedBundle={selected} linearDisplay={linearDisplay} setLinearDisplay={setLinearDisplay} />
+      :
+      null
+    }
+    </>
   )
 }

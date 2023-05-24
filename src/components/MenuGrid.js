@@ -9,18 +9,18 @@ import Link from 'next/link'
 
   const actions = [
     {
-      title: 'Saved emails',
-      href: '/app/emails',
-      icon: BookmarkIcon,
-      iconForeground: 'text-teal-700',
-      iconBackground: 'bg-teal-50',
-    },
-    {
       title: 'Generator',
       href: '/app/generator',
       icon: CodeBracketIcon,
       iconForeground: 'text-purple-700',
       iconBackground: 'bg-purple-50',
+    },
+    {
+      title: 'Saved emails',
+      href: '/app/emails',
+      icon: BookmarkIcon,
+      iconForeground: 'text-teal-700',
+      iconBackground: 'bg-teal-50',
     },
     {
       title: 'Offer',

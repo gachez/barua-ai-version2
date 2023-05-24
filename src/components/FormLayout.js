@@ -17,7 +17,7 @@ function randomWord() {
   const letters = "abcdefghijklmnopqrstuvwxyz";
   let word = "";
   for (let i = 0; i < 6; i++) {
-      word += letters[Math.floor(Math.random() * letters.length)];
+    word += letters[Math.floor(Math.random() * letters.length)];
   }
   return `baruaAI-${word}`;
 }
@@ -35,7 +35,7 @@ export default function FormLayout(props) {
       behavior: 'smooth', // optional, for smooth scrolling
     });
   };
-  
+
 
   const [targetName, setTargetName] = React.useState("");
   const [productDesc, setProductDesc] = React.useState("");
@@ -54,59 +54,60 @@ export default function FormLayout(props) {
   const [savedOffers, setSavedOffers] = React.useState([])
   const [showFineTuneModal, setShowFineTuneModal] = React.useState(false)
   const [instruction, setInstruction] = React.useState('')
-  
-  function closeAlert(delay=3500){
-    setTimeout(() => { 
-      setShowAlert(false) 
+  const [savedProspects, setSavedProspects] = React.useState([])
+
+  function closeAlert(delay = 3500) {
+    setTimeout(() => {
+      setShowAlert(false)
       setShowFormAlert(false)
     }, delay)
   }
 
   function downloadEmail() {
     setLoadingBar(true)
-    axios.post(`${Config.API_URI}/download-emails/${userId}`,{
-      emailData:generatedEmail
+    axios.post(`${Config.API_URI}/download-emails/${userId}`, {
+      emailData: generatedEmail
     },
-    {
-      responseType: 'blob'
-    })
-    .then(res => {
-      fileDownload(res.data, `${randomWord()}.docx`)
-      // navigate('/app/success')
-      setAlertStatus('success')
-      setAlertText('✨ Succesfully donloaded email!')
-      setShowFormAlert(true)
-      return
-    })
-    .catch(err => {
-      console.log(err)
-      setAlertStatus('error')
-      setAlertText('Error occured downloading email!')
-      setShowFormAlert(true)
-    })
-    .finally(() => {
-      setLoadingBar(false)
-      closeAlert()
-    })
+      {
+        responseType: 'blob'
+      })
+      .then(res => {
+        fileDownload(res.data, `${randomWord()}.docx`)
+        // navigate('/app/success')
+        setAlertStatus('success')
+        setAlertText('✨ Succesfully donloaded email!')
+        setShowFormAlert(true)
+        return
+      })
+      .catch(err => {
+        console.log(err)
+        setAlertStatus('error')
+        setAlertText('Error occured downloading email!')
+        setShowFormAlert(true)
+      })
+      .finally(() => {
+        setLoadingBar(false)
+        closeAlert()
+      })
   }
 
-  async function saveEmail(){
+  async function saveEmail() {
     setLoadingBar(true)
     try {
-    const docRef = await addDoc(collection(db, "userEmails"), {
-      userId: JSON.parse(localStorage.getItem('user'))?.email,
-      email: generatedEmail,
-      createdAt: new Date().toISOString(),
-      offer: productDesc,
-      targetCustomer: targetDesc,
-      targetName: targetName 
-    });
-    console.log("Email created with ID: ", docRef.id);
-    setAlertStatus('success')
-    setAlertText('✨ Succesfully saved message!')
-    setShowFormAlert(true)
-    setLoadingBar(false)
-    closeAlert()
+      const docRef = await addDoc(collection(db, "userEmails"), {
+        userId: JSON.parse(localStorage.getItem('user'))?.email,
+        email: generatedEmail,
+        createdAt: new Date().toISOString(),
+        offer: productDesc,
+        targetCustomer: targetDesc,
+        targetName: targetName
+      });
+      console.log("Email created with ID: ", docRef.id);
+      setAlertStatus('success')
+      setAlertText('✨ Succesfully saved message!')
+      setShowFormAlert(true)
+      setLoadingBar(false)
+      closeAlert()
     } catch (error) {
       console.error(error)
       setLoadingBar(false)
@@ -117,27 +118,43 @@ export default function FormLayout(props) {
     }
   }
 
-  async function getOffers(){
+  async function getOffers() {
     const userEmail = JSON.parse(localStorage.getItem('user'))?.email
     try {
-        let emailObjs = []
-        let offersFound = []
-        let emailRefsL = []
-    const q = query(collection(db, "userOffers"), where("userEmail", "==", userEmail));
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      offersFound.push(doc.data())
-      emailRefsL.push(doc.id)
-      emailObjs.push({
-        id: doc.id,
-        email: doc.data()
-      })
-    });
-    console.log(offersFound)
-    setSavedOffers(offersFound)
+      let emailObjs = []
+      let offersFound = []
+      let emailRefsL = []
+      const q = query(collection(db, "userOffers"), where("userEmail", "==", userEmail));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        offersFound.push(doc.data())
+        emailRefsL.push(doc.id)
+        emailObjs.push({
+          id: doc.id,
+          email: doc.data()
+        })
+      });
+      console.log(offersFound)
+      setSavedOffers(offersFound)
     } catch (error) {
-        console.error(error)
-        alert(error)
+      console.error(error)
+      alert(error)
+    }
+  }
+
+  async function getProspects() {
+    const userEmail = JSON.parse(localStorage.getItem('user'))?.email
+    try {
+      let prospectsFound = []
+      const q = query(collection(db, "userProspects"), where("userEmail", "==", userEmail));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        prospectsFound.push(doc.data())
+      })
+      console.log(prospectsFound)
+      setSavedProspects(prospectsFound)
+    } catch (error) {
+      console.error(error)
     }
   }
 
@@ -151,26 +168,27 @@ export default function FormLayout(props) {
       console.error('Error copying text:', error);
     }
   }
-  
+
   React.useEffect(() => {
     setIsFormReady(true);
     getOffers()
+    getProspects()
   }, [])
-  
+
 
   function generateEmail() {
     setGeneratedEmail('')
-    window.location.href='#'
+    window.location.href = '#'
     setLoading(true);
     axios
       .post(
         `${Config.API_URI}/generate-email-sequence`,
         {
-          targetName: targetName, 
+          targetName: targetName,
           offer: productDesc,
-          avatar: targetDesc, 
+          avatar: targetDesc,
           mood: mood
-        
+
         },
         {
           // Set the 'Content-Disposition' header to 'inline'
@@ -195,7 +213,7 @@ export default function FormLayout(props) {
         // invoke the function
         setTimeout(() => {
           scrollToBottom();
-        },200)
+        }, 200)
       })
       .catch((error) => {
         // Handle any errors that occur
@@ -253,207 +271,232 @@ export default function FormLayout(props) {
 
   return (
     <>
-    {
-      isFormReady &&
-      <form>
-        {
-          showAlert
-          ?
-          <Alert style={{zIndex: 99}} severity={alertStatus}>{alertText}</Alert>
-          :
-          null
-        }
-    
-        <div className="space-y-12 py-4">
-          <div className="border-b border-white/10 pb-12">
-            <h2 className="text-base font-semibold leading-7 text-white">
-              {props.type === 'demo' ? 'Experience the Power of Barua AI' : 'Email Generator'}
-            </h2>
-            <p className="mt-1 text-sm leading-6 text-gray-400">
-              We need a few detals before we can make you an awesome message.
-            </p>
+      {
+        isFormReady &&
+        <form>
+          {
+            showAlert
+              ?
+              <Alert style={{ zIndex: 99 }} severity={alertStatus}>{alertText}</Alert>
+              :
+              null
+          }
 
-            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-              <div className="sm:col-span-3">
-                <label
-                  htmlFor="first-name"
-                  className="block text-sm font-medium leading-6 text-white"
-                >
-                  Target name 🎯
-                </label>
+          <div className="space-y-12 py-4">
+            <div className="border-b border-white/10 pb-12">
+              <h2 className="text-base font-semibold leading-7 text-white">
+                {props.type === 'demo' ? 'Experience the Power of Barua AI' : 'Email Generator'}
+              </h2>
+              <p className="mt-1 text-sm leading-6 text-gray-400">
+                We need a few detals before we can make you an awesome message.
+              </p>
 
-                <div className="col-span-full">
-                  <p className="mt-3 text-sm leading-6 text-gray-400">
-                    Name of your target.
-                  </p>
+              <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor="first-name"
+                    className="block text-sm font-medium leading-6 text-white"
+                  >
+                    Target name 🎯
+                  </label>
                   <div className="mt-2">
-                    <textarea
-                      id="product-details"
-                      name="product-details"
-                      rows={1}
+                    <select
+                      id="prospect"
+                      name="prospect"
+                      autoComplete="prospect-name"
                       onChange={(e) => {
-                        setTargetName(e.target.value);
+                        console.log(e.target.value)
+                        const val = e.target.value
+                        const name = val.split('-')[0]
+                        const desc = val.split('-')[1]
+
+                        setTargetName(name)
+                        setTargetDesc(desc)
                       }}
-                      className="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
-                      defaultValue={""}
-                      placeholder="e.g John"
-                    />
+                      className="relative block w-full rounded-none rounded-t-md border-0 bg-transparent py-1.5 text-gray-400 ring-1 ring-inset ring-gray-300 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    >
+                      <option>Use saved prospect</option>
+                      {
+                        savedProspects.map((it, index) => {
+                          return (
+                            <option key={index} value={`${it?.prospectName}-${it?.prospectDescription}`} className="text-gray-900">{it?.prospectName}</option>
+                          )
+                        })
+                      }
+                    </select>
+                  </div>
+                  <div className="col-span-full">
+                    <p className="mt-3 text-sm leading-6 text-gray-400">
+                      Name of your target.
+                    </p>
+                    <div className="mt-2">
+                      <textarea
+                        id="product-details"
+                        name="product-details"
+                        rows={1}
+                        value={targetName}
+                        onChange={(e) => {
+                          setTargetName(e.target.value);
+                        }}
+                        className="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                        placeholder="e.g John"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="sm:col-span-4">
-                <div className="sm:col-span-3">
+                <div className="sm:col-span-4">
+                  <div className="sm:col-span-3">
+                    <label
+                      htmlFor="last-name"
+                      className="block text-sm font-medium leading-6 text-white"
+                    >
+                      Offer 📢
+                    </label>
+                    <div className="mt-2 -space-y-px rounded-md shadow-sm">
+                      {
+                        props.type === "demo"
+                          ?
+                          null
+                          :
+                          <div>
+                            <select
+                              id="country"
+                              name="country"
+                              autoComplete="country-name"
+                              onChange={(e) => {
+                                console.log(e.target.value)
+                                setProductDesc(e.target.value)
+                              }}
+                              className="relative block w-full rounded-none rounded-t-md border-0 bg-transparent py-1.5 text-gray-400 ring-1 ring-inset ring-gray-300 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            >
+                              <option>Use saved offer</option>
+                              {
+                                savedOffers.map((it, index) => {
+                                  return (
+                                    <option key={index} value={it.offer} className="text-gray-900">{it?.name}</option>
+                                  )
+                                })
+                              }
+                            </select>
+                          </div>
+                      }
+                      <div>
+                        <label htmlFor="postal-code" className="sr-only">
+                          Write below
+                        </label>
+                        <p className="mt-3 text-sm leading-6 text-gray-400">
+                          Describe what you're offering. Are you selling a product, a service, or maybe proposing a partnership? Your offer is the core of your email, so be clear and compelling.
+                        </p>
+                        <textarea
+                          onChange={(e) => {
+                            setProductDesc(e.target.value)
+                          }}
+                          rows={8}
+                          type="text-area"
+                          name="offer"
+                          id="offer"
+                          value={productDesc}
+                          className="relative block w-full mt-2 rounded-none rounded-b-md border-0 bg-white/5 py-1.5 text-gray-100 ring-1 ring-inset ring-gray-300 placeholder:text-gray-600 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          placeholder="e.g My name is Brian and I am offering graphic design services that help..."
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="sm:col-span-4">
                   <label
                     htmlFor="last-name"
                     className="block text-sm font-medium leading-6 text-white"
                   >
-                    Offer 📢
+                    Target descrption 📉
                   </label>
-                    <div className="mt-2 -space-y-px rounded-md shadow-sm">
-                    {
-                      props.type === "demo"
-                      ?
-                      null
-                      :
-                      <div>
-                       <select
-                        id="country"
-                        name="country"
-                        autoComplete="country-name"
-                        onChange={(e) => {
-                          console.log(e.target.value)
-                          setProductDesc(e.target.value)
-                        }}
-                        className="relative block w-full rounded-none rounded-t-md border-0 bg-transparent py-1.5 text-gray-400 ring-1 ring-inset ring-gray-300 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                       >
-                        <option>Use saved offer</option>
-                        {
-                          savedOffers.map((it,index) => {
-                            return(
-                              <option key={index} value={it.offer} className="text-gray-900">{it?.name}</option>
-                            )
-                          })
-                        }
-                      </select>
-                    </div>
-                    }
-                    <div>
-                    <label htmlFor="postal-code" className="sr-only">
-                      Write below
-                    </label>
+                  <div className="col-span-full">
                     <p className="mt-3 text-sm leading-6 text-gray-400">
-                    Describe what you're offering. Are you selling a product, a service, or maybe proposing a partnership? Your offer is the core of your email, so be clear and compelling.
+                      Give us a snapshot of your prospect. What industry are they in?
+                      What's their role? What challenges do they face?
+                      The more detailed and precise your description,
+                      the better the AI can tailor the message.
                     </p>
-                    <textarea
-                      onChange={(e) => {
-                        setProductDesc(e.target.value)
-                      }}
-                      rows={8}
-                      type="text-area"
-                      name="offer"
-                      id="offer"
-                      value={productDesc}
-                      className="relative block w-full mt-2 rounded-none rounded-b-md border-0 bg-white/5 py-1.5 text-gray-100 ring-1 ring-inset ring-gray-300 placeholder:text-gray-600 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      placeholder="e.g My name is Brian and I am offering graphic design services that help..."
-                    />
+                    <div className="mt-2">
+                      <textarea
+                        id="product-details"
+                        name="product-details"
+                        onChange={(e) => {
+                          setTargetDesc(e.target.value);
+                        }}
+                        rows={4}
+                        className="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset placeholder:text-gray-600 ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                        value={targetDesc}
+                        placeholder="e.g Shiv runs a bookkeeping agency that works with SMEs and freelancers. They have a website but it does not convert users as much as they want and does not show social proof."
+                      />
+                    </div>
                   </div>
                 </div>
-                </div>
-              </div>
-              <div className="sm:col-span-4">
-                <label
-                  htmlFor="last-name"
-                  className="block text-sm font-medium leading-6 text-white"
-                >
-                  Target descrption 📉
-                </label>
-                <div className="col-span-full">
-                  <p className="mt-3 text-sm leading-6 text-gray-400">
-                  Give us a snapshot of your prospect. What industry are they in? 
-                  What's their role? What challenges do they face? 
-                  The more detailed and precise your description, 
-                  the better the AI can tailor the message.
-                  </p>
-                  <div className="mt-2">
-                    <textarea
-                      id="product-details"
-                      name="product-details"
-                      onChange={(e) => {
-                        setTargetDesc(e.target.value);
-                      }}
-                      rows={4}
-                      className="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset placeholder:text-gray-600 ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
-                      defaultValue={""}
-                      placeholder="e.g Shiv runs a bookkeeping agency that works with SMEs and freelancers. They have a website but it does not convert users as much as they want and does not show social proof."
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="sm:col-span-3">
-                <label
-                  htmlFor="country"
-                  className="block text-sm font-medium leading-6 text-white"
-                >
-                  Mood / Tone
-                </label>
-                <div className="mt-2">
-                  <select
-                    id="tone"
-                    defaultValue={'professional'}
-                    name="tone"
-                    onChange={(e) => {
-                      setMood(e.value)
-                    }}
-                    autoComplete="country-name"
-                    className="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 [&_*]:text-black"
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor="country"
+                    className="block text-sm font-medium leading-6 text-white"
                   >
-                    <option value={'professional'}>Professional</option>
-                    <option value={'informal'} >Conversational</option>
-                    <option value={'friendly'}>Friendly</option>
-                    <option value={'urgent'} >Urgent</option>
-                    <option value={'persuasive'} >Persuasive</option>
-                  </select>
+                    Mood / Tone
+                  </label>
+                  <div className="mt-2">
+                    <select
+                      id="tone"
+                      defaultValue={'professional'}
+                      name="tone"
+                      onChange={(e) => {
+                        setMood(e.value)
+                      }}
+                      autoComplete="country-name"
+                      className="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 [&_*]:text-black"
+                    >
+                      <option value={'professional'}>Professional</option>
+                      <option value={'informal'} >Conversational</option>
+                      <option value={'friendly'}>Friendly</option>
+                      <option value={'urgent'} >Urgent</option>
+                      <option value={'persuasive'} >Persuasive</option>
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="mt-6 flex items-center justify-end gap-x-6">
-          <button
-            type="submit"
-            className="rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-            onClick={(e) => {
-              e.preventDefault();
-              if(targetName === '' || targetDesc === '' || productDesc === '' || mood === '') {
-                console.log(targetName, targetDesc, productDesc, mood)
-                setAlertText('Please fill all fields in order to generate an email')
-                window.location.href='#'
-                setAlertStatus('error')
-                setShowAlert(true)
-                closeAlert()                
-                return
-              }
-              setMood(document.getElementById("tone").value);
-              generateEmail();
-            }}
-          >
-            Generate
-          </button>
-        </div>
-      </form>
-    }
+          <div className="mt-6 flex items-center justify-end gap-x-6">
+            <button
+              type="submit"
+              className="rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+              onClick={(e) => {
+                e.preventDefault();
+                if (targetName === '' || targetDesc === '' || productDesc === '' || mood === '') {
+                  console.log(targetName, targetDesc, productDesc, mood)
+                  setAlertText('Please fill all fields in order to generate an email')
+                  window.location.href = '#'
+                  setAlertStatus('error')
+                  setShowAlert(true)
+                  closeAlert()
+                  return
+                }
+                setMood(document.getElementById("tone").value);
+                generateEmail();
+              }}
+            >
+              Generate
+            </button>
+          </div>
+        </form>
+      }
       <br />
       <br />
       {loaded ? (
         <form id="wyswig">
           {
             showFormAlert
-            ?
-            <Alert style={{zIndex: 99}} severity={alertStatus}>{alertText}</Alert>
-            :
-            null
+              ?
+              <Alert style={{ zIndex: 99 }} severity={alertStatus}>{alertText}</Alert>
+              :
+              null
           }
           <div className="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
             <div className="flex items-center justify-between px-3 py-2 border-b dark:border-gray-600">
@@ -462,18 +505,18 @@ export default function FormLayout(props) {
                   <button
                     type="button"
                     onClick={() => {
-                      if(props.type === "demo") {
+                      if (props.type === "demo") {
                         return
                       }
                       saveEmail()
                     }}
                     className="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
                   >
-                    <div className="tooltip" data-tip={props.type === "demo"?"Sign up to use this feature":"Save this message"}>
+                    <div className="tooltip" data-tip={props.type === "demo" ? "Sign up to use this feature" : "Save this message"}>
                       <Image
-                          src={Bookmark}
-                          width={24}
-                          height={24}
+                        src={Bookmark}
+                        width={24}
+                        height={24}
                         alt="Save"
                       />
                       <span className="sr-only">Add list</span>
@@ -522,14 +565,14 @@ export default function FormLayout(props) {
                   <button
                     type="button"
                     onClick={() => {
-                      if(props.type === "demo"){
+                      if (props.type === "demo") {
                         return
                       }
                       setShowFineTuneModal(true)
                     }}
                     className="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
                   >
-                    <div className="tooltip" data-tip={props.type==="demo"?"Sign up to fine-tune your message":"Modify message"} >
+                    <div className="tooltip" data-tip={props.type === "demo" ? "Sign up to fine-tune your message" : "Modify message"} >
                       <Image
                         src={Finetune}
                         width={24}
@@ -541,7 +584,7 @@ export default function FormLayout(props) {
                   </button>
                 </div>
               </div>
-            
+
               <div
                 id="tooltip-fullscreen"
                 role="tooltip"
@@ -552,15 +595,15 @@ export default function FormLayout(props) {
               </div>
             </div>
             <div className="px-4 py-2 bg-white rounded-b-lg dark:bg-gray-800">
-             {
-              loadingBar
-              ?
-              <LinearProgress />
-              :
-              null
-             }
+              {
+                loadingBar
+                  ?
+                  <LinearProgress />
+                  :
+                  null
+              }
               <textarea
-                style={{opacity: loadingBar ? 0.2 : 1}}
+                style={{ opacity: loadingBar ? 0.2 : 1 }}
                 id="contentForm" ref={contentFormRef}
                 rows="20"
                 className="block w-full px-0 text-sm text-gray-800 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"
@@ -609,26 +652,26 @@ export default function FormLayout(props) {
       </div>
       {
         showFineTuneModal
-        ?
-        <TextAreaModal 
-          setAlertSeverity={setAlertStatus} 
-          setAlertText={setAlertText} 
-          setShowAlert={setShowAlert} 
-          alertSeverity={alertStatus} 
-          alertText={alertText} 
-          showAlert={showAlert} 
-          loadingBar={loadingBar} 
-          setLoadingBar={setLoadingBar} 
-          type="tune" 
-          improveEmail={improveEmail}
-          instruction={instruction}
-          setInstruction={setInstruction}
-          setOpen={setShowFineTuneModal} 
-          closeAlert={closeAlert}
-          open={showFineTuneModal} />
-        :
-        null
-    }
+          ?
+          <TextAreaModal
+            setAlertSeverity={setAlertStatus}
+            setAlertText={setAlertText}
+            setShowAlert={setShowAlert}
+            alertSeverity={alertStatus}
+            alertText={alertText}
+            showAlert={showAlert}
+            loadingBar={loadingBar}
+            setLoadingBar={setLoadingBar}
+            type="tune"
+            improveEmail={improveEmail}
+            instruction={instruction}
+            setInstruction={setInstruction}
+            setOpen={setShowFineTuneModal}
+            closeAlert={closeAlert}
+            open={showFineTuneModal} />
+          :
+          null
+      }
     </>
   );
 }

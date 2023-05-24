@@ -5,26 +5,111 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import Logo from '@/img/logo-black.png'
 import Avatar from '@/img/avatar.png'
+import { addDoc, collection } from 'firebase/firestore'
+import { db } from '@/firebase.config';
+import axios from 'axios';
+import Config from '@/config';
 import {
   Bars3Icon,
   FolderIcon,
   HomeIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
-import { ChevronDownIcon, BoltIcon,BookmarkIcon, CodeBracketIcon , Square3Stack3DIcon, BanknotesIcon} from '@heroicons/react/20/solid'
+import { ChevronDownIcon, BoltIcon,BookmarkIcon, CodeBracketIcon ,CircleStackIcon, Square3Stack3DIcon, BanknotesIcon} from '@heroicons/react/20/solid'
 import Link from 'next/link';
+import SubscriptionPaymentModal from './SubscriptionPaymentModal';
+import { getSignedInUserCookie } from '@/utils';
 
 export default function NavBarTop(props) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [subscriptionModal, setSubscriptionModal] = useState(false)
+  const [paymentURI, setPaymentURI] = useState('')
+  const [showPaymentModal, setShowPaymentModal] = useState(false)
+
+  async function makeOrder (details){
+    try {
+        const docRef = await addDoc(collection(db, "orders"), details)
+        console.log("Order created with ID: ", docRef.id)
+      } catch (e) {
+        console.error("Error adding order: ", e)
+      }
+    }
+
+  function startPayment(){
+    const payment =   {
+      "type":"subscription",
+      "order":
+          {
+          "currency": "USD",
+          "account_number": localStorage.getItem('userAccount'),
+          "amount": 39,
+          "description": "Buy subscription",
+          "billing_address": {
+              "email_address": getSignedInUserCookie(),
+              "phone_number": null,
+              "country_code": "",
+              "first_name": JSON.parse(localStorage.getItem('user')).name,
+              "middle_name": "",
+              "last_name": "",
+              "line_1": "",
+              "line_2": "",
+              "city": "",
+              "state": "",
+              "postal_code": null,
+              "zip_code": null
+          }
+      }
+    }
+    axios.post(`${Config.API_URI}/make-payment`,payment,{
+      'isSubscription':true
+    })
+    .then(res => {
+        setPaymentURI(res.data.redirect_url)
+        // setMerchantID(res.data.merchant_reference)
+        localStorage.setItem('merchantID',res.data.merchant_reference)
+        setShowPaymentModal(true)
+        makeOrder({
+            merchantID:res.data.merchant_reference,
+            amount: 39,
+            description: 'Buy credits',
+            user: getSignedInUserCookie(),
+            type:'subscription',
+            status: 'incomplete',
+            currency: "USD",
+            credits: 500,
+            created:  `${new Date()}`,
+            accountNumber: localStorage.getItem('userAccount')
+        }).then(() => {
+            setShowPaymentModal(true)
+        })
+    })
+    .catch(err => {
+        console.error(err)
+    })
+    .finally(() => {
+      console.log('m')
+    })
+  }
   const {
     asPath,        // the value: "/question/how-do-you-get-the-current-url-in-nextjs/"
     pathname,   // the value: "/question/[slug]"
   } = useRouter();
 
-  React.useEffect(() => {
-    console.log(asPath, pathname)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+  function sendEmail(amount,credits,){
+    axios.post(`${Config.API_URI}/send-mail`,{
+        to:getSignedInUserCookie(),
+        bcc:"",
+        subject:`Order initiated!`,
+        message:  returnOrderEmail(JSON.parse(localStorage.getItem('user')).name,amount,localStorage.getItem('userAccount'),credits,'Buy subscription','incomplete')
+    })
+    .then(() => {
+        console.log('email sent')
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  } 
+
   const userNavigation = [
     { name: 'Sign out', href: '/app/auth' },
   ]
@@ -35,10 +120,10 @@ export default function NavBarTop(props) {
     { name: 'Offers', href: '/app/offers', icon: FolderIcon, current: asPath.includes('offers') },
     { name: 'Database', href: '/app/database', icon: Square3Stack3DIcon, current: asPath.includes('database')},
   ]
+
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }
-
 
   return (
     <>
@@ -194,6 +279,10 @@ export default function NavBarTop(props) {
               </div>
 
               <div className="flex items-center gap-x-4 lg:gap-x-6">
+                <div className='flex justify-center items-center'>
+                  <CircleStackIcon width={18} height={18} />
+                  <span className='px-1'>{JSON.parse(localStorage.getItem('user'))?.creditsAvailable} Credits</span>
+                </div>
                 <button
                   onClick={() => {
                     props.setOpen(true)
@@ -210,12 +299,25 @@ export default function NavBarTop(props) {
                   null
                   :
                   <button
+                  onClick={() => {
+                    startPayment()
+                  }}
                   type="button"
                   className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                   >
                     <BoltIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
                     Upgrade
                   </button>
+                }
+                {
+                  JSON.parse(window.localStorage.getItem('user'))?.isSubscribed
+                  ?
+                  <div className='flex justify-center items-center'>
+                    <BoltIcon width={18} height={18} />
+                    <span className='px-1 text-green-400'>Premium</span>
+                  </div>
+                  :
+                  null
                 }
                 {/* Separator */}
                 <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-900/10" aria-hidden="true" />
@@ -269,8 +371,21 @@ export default function NavBarTop(props) {
               </div>
             </div>
           </div>
+          <main className="py-10">
+            <div className="px-4 sm:px-6 lg:px-8">
+              {/* Your content */}
+              {props.mainComponent}
+              </div>
+          </main>
         </div>
       </div>
+      {
+        showPaymentModal
+        ?
+        <SubscriptionPaymentModal paymentURI={paymentURI} />
+        :
+        null
+      }
     </>
   )
 }

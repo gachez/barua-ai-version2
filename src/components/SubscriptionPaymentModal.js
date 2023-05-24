@@ -1,11 +1,10 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
-import CloseIcon from '@mui/icons-material/Close';
 import Logo from '@/img/logo-white.png'
 import Image from 'next/image';
 import Link from 'next/link';
-import { ChevronRightIcon, BanknotesIcon } from '@heroicons/react/24/outline';
+import { ChevronRightIcon, BanknotesIcon, BoltIcon } from '@heroicons/react/24/outline';
 
 const style = {
   position: 'absolute',
@@ -23,11 +22,10 @@ const style = {
   pb: 3,
 };
 const steps = [
-  { name: 'Buy credits', href: '#', status: 'complete' },
-  { name: 'Choose bundle', href: '#', status: 'complete' },
+  { name: 'Upgrade', href: '#', status: 'complete' },
   { name: 'Payment', href: '#', status: 'current' },
 ]
-export default function PaymentUI(props) {
+export default function SubscriptionPaymentModal(props) { 
   const [open, setOpen] = React.useState(true);
   const handleClose = () => {
     setOpen(false);
@@ -45,13 +43,13 @@ export default function PaymentUI(props) {
           <header className="relative border-b border-gray-200 bg-white text-sm font-medium text-gray-700">
           <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
             <div className="relative flex justify-end sm:justify-center">
-              <Link href="#" className="absolute left-0 top-1/2 -mt-4">
+              <Link href="#" className="absolute left-0 top-1/2 -mt-4 flex">
                 <span className="sr-only">Barua AI</span>
                 <Image
                   src={Logo}
                   alt="Barua AI logo"
-                  height={32}
-                  width={32}
+                  height={24}
+                  width={24}
                 />
               </Link>
               <nav aria-label="Progress" className="hidden sm:block">
@@ -88,10 +86,9 @@ export default function PaymentUI(props) {
 
             <ul role="list" className="divide-y divide-gray-200 text-sm font-medium text-gray-900">
                 <li className="flex items-start space-x-4 py-6">
-                  <div className="flex-auto space-y-1">
-                    <h3>{props.selectedBundle.name}</h3>
+                  <div className="flex space-y-1">
+                    <BoltIcon width={32} height={32} /> <h3>Premium plan</h3>
                   </div>
-                  <p className="flex-none text-base font-medium">{JSON.parse(props.selectedBundle.price.replace('$','')) * 10} credits</p>
                 </li>
             </ul>
           </div>

@@ -1,16 +1,13 @@
 "use client"
 import React from "react";
-import Stats from "@/components/Stats";
-import { useRouter } from 'next/router';
-import Footer from "@/components/Footer";
-import { doc, updateDoc,addDoc } from "firebase/firestore";
 import { db } from '@/firebase.config';
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { getSignedInUserCookie } from "@/utils";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 import BuyCreditsModal from "@/components/BuyCreditModal";
-const MenuGrid = dynamic(()=>import("@/components/MenuGrid"))
 const NavBarTop = dynamic(()=>import("@/components/NavBarTop"))
+const DashboardComponent = dynamic(() => import("@/components/Dashboard"))
 
 export default function Dashboard() {
   const router = useRouter();
@@ -93,25 +90,14 @@ export default function Dashboard() {
 
     return(
         <>
-            <NavBarTop signedInUser={signedInUser} setOpen={setOpen} />
-            <main className="h-full flex-col">
-            <div className="mx-auto max-w-7xl h-screen py-6 sm:px-6 lg:px-8">
-            {/* Your content */}
-                {/* Secondary navigation */}
-
-                {/* Stats */}
-                <Stats signedInUser={signedInUser} offers={userOffers} userEmails={userEmails} /><br />
-                <MenuGrid />
-                </div>
-                <Footer />
-            </main>
-            {
-              open
-              ?
-              <BuyCreditsModal setOpen={setOpen} open={open} />
-              :
-              null
-            }
+        <NavBarTop signedInUser={signedInUser} setOpen={setOpen} mainComponent={<DashboardComponent />} />
+          {
+            open
+            ?
+            <BuyCreditsModal setOpen={setOpen} open={open} />
+            :
+            null
+          }
         </>
     )
 }
