@@ -299,32 +299,38 @@ export default function FormLayout(props) {
                   >
                     Target name 🎯
                   </label>
-                  <div className="mt-2">
-                    <select
-                      id="prospect"
-                      name="prospect"
-                      autoComplete="prospect-name"
-                      onChange={(e) => {
-                        console.log(e.target.value)
-                        const val = e.target.value
-                        const name = val.split('-')[0]
-                        const desc = val.split('-')[1]
+                    {
+                        props.type === "demo"
+                          ?
+                          null
+                          :
+                          <div className="mt-2">
+                            <select
+                              id="prospect"
+                              name="prospect"
+                              autoComplete="prospect-name"
+                              onChange={(e) => {
+                                console.log(e.target.value)
+                                const val = e.target.value
+                                const name = val.split('-')[0]
+                                const desc = val.split('-')[1]
 
-                        setTargetName(name)
-                        setTargetDesc(desc)
-                      }}
-                      className="relative block w-full rounded-none rounded-t-md border-0 bg-transparent py-1.5 text-gray-400 ring-1 ring-inset ring-gray-300 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    >
-                      <option>Use saved prospect</option>
-                      {
-                        savedProspects.map((it, index) => {
-                          return (
-                            <option key={index} value={`${it?.prospectName}-${it?.prospectDescription}`} className="text-gray-900">{it?.prospectName}</option>
-                          )
-                        })
-                      }
-                    </select>
-                  </div>
+                                setTargetName(name)
+                                setTargetDesc(desc)
+                              }}
+                              className="relative block w-full rounded-none rounded-t-md border-0 bg-transparent py-1.5 text-gray-400 ring-1 ring-inset ring-gray-300 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            >
+                              <option>Use saved prospect</option>
+                              {
+                                savedProspects.map((it, index) => {
+                                  return (
+                                    <option key={index} value={`${it?.prospectName}-${it?.prospectDescription}`} className="text-gray-900">{it?.prospectName}</option>
+                                  )
+                                })
+                              }
+                            </select>
+                          </div>
+                    }
                   <div className="col-span-full">
                     <p className="mt-3 text-sm leading-6 text-gray-400">
                       Name of your target.
