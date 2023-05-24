@@ -11,7 +11,7 @@ export default function Feature4Section() {
             <div className="lg:max-w-lg">
               <p className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">Save Your Masterpieces for Future Use</p>
               <p className="mt-6 text-lg leading-8 text-gray-300">
-              With Barua AI, you can easily save your AI-generated emails for later use. No more searching through countless drafts to find that one winning email. It's all at your fingertips, ready whenever you need it.
+              With Barua AI, you can easily save your AI-generated emails for later use. No more searching through countless drafts to find that one winning email. It&apos;s all at your fingertips, ready whenever you need it.
               </p>
             </div>
           </div>

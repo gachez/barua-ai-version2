@@ -37,7 +37,7 @@ export default function Pricing() {
         </div>
         <div className="relative mt-6">
           <p className="mx-auto max-w-2xl text-lg leading-8 text-white/60">
-          Whether you're a small business just starting with email marketing or a large enterprise looking to optimize your outreach, Barua AI has a plan for you. Choose from our affordable Basic and Premium plans and start generating compelling sales emails today.
+          Whether you&apos;re a small business just starting with email marketing or a large enterprise looking to optimize your outreach, Barua AI has a plan for you. Choose from our affordable Basic and Premium plans and start generating compelling sales emails today.
           </p>
           <svg
             viewBox="0 0 1208 1024"

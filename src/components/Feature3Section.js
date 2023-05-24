@@ -11,7 +11,7 @@ export default function Feature3Section() {
             <div className="lg:max-w-lg">
               <p className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">Fine-Tune Your Emails for That Personal Touch</p>
               <p className="mt-6 text-lg leading-8 text-gray-300">
-              Want to add a personal touch to your AI-generated emails? With our fine-tune feature, you can tweak your messages as needed, ensuring they perfectly align with your unique business communication style. It's your message, your way!
+              Want to add a personal touch to your AI-generated emails? With our fine-tune feature, you can tweak your messages as needed, ensuring they perfectly align with your unique business communication style. It&apos;s your message, your way!
               </p>
             </div>
           </div>

@@ -11,17 +11,17 @@ const features = [
   },
   {
     name: 'Detail your offer.',
-    description: "Whether it's a product, service, or partnership proposal, just give us the details.",
+    description: "Whether it&apos;s a product, service, or partnership proposal, just give us the details.",
     icon: LockClosedIcon,
   },
   {
     name: 'Describe your prospect.',
-    description: "Help us understand who you're reaching out to, and we'll tailor the message to resonate with them.",
+    description: "Help us understand who you&apos;re reaching out to, and we&apos;ll tailor the message to resonate with them.",
     icon: ServerIcon,
   },
   {
     name: 'Choose your tone.',
-    description: "Whether you prefer a formal, casual, or friendly tone, we’ve got you covered.",
+    description: "Whether you prefer a formal, casual, or friendly tone, we&apos;ve got you covered.",
     icon: ServerIcon,
   },
   
@@ -36,7 +36,7 @@ export default function Feature1Section() {
             <div className="lg:max-w-lg">
               <p className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">Save Time with Preloaded Offers</p>
               <p className="mt-6 text-lg leading-8 text-gray-300">
-              Say goodbye to repetitive typing. With Barua AI, you can save your offers for quick and easy email generation. Select a saved offer, and let our AI tool do the rest. It's time-saving functionality at its best!
+              Say goodbye to repetitive typing. With Barua AI, you can save your offers for quick and easy email generation. Select a saved offer, and let our AI tool do the rest. It&apos;s time-saving functionality at its best!
               </p>
             </div>
           </div>

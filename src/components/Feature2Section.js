@@ -4,24 +4,24 @@ import Image from 'next/image'
 
 const features = [
   {
-    name: "Provide your prospect's name",
+    name: "Provide your prospect&apos;s name",
     description:
       'No more generic emails. Personalization is the key to a response',
     icon: CloudArrowUpIcon,
   },
   {
     name: 'Detail your offer.',
-    description: "Whether it's a product, service, or partnership proposal, just give us the details.",
+    description: "Whether it&apos;s a product, service, or partnership proposal, just give us the details.",
     icon: LockClosedIcon,
   },
   {
     name: 'Describe your prospect.',
-    description: "Help us understand who you're reaching out to, and we'll tailor the message to resonate with them.",
+    description: "Help us understand who you're reaching out to, and we&apos;ll tailor the message to resonate with them.",
     icon: ServerIcon,
   },
   {
     name: 'Choose your tone.',
-    description: "Whether you prefer a formal, casual, or friendly tone, we’ve got you covered.",
+    description: "Whether you prefer a formal, casual, or friendly tone, we&apos;ve got you covered.",
     icon: ServerIcon,
   },
   
@@ -36,7 +36,7 @@ export default function Feature2Section() {
             <div className="lg:max-w-lg">
               <p className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">Share Your Success with the Team</p>
               <p className="mt-6 text-lg leading-8 text-gray-300">
-              Need to share your winning emails with your team? No problem. Barua AI lets you download your AI-generated sales emails to a document, making sharing a breeze. It's team collaboration made easy!
+              Need to share your winning emails with your team? No problem. Barua AI lets you download your AI-generated sales emails to a document, making sharing a breeze. It&apos;s team collaboration made easy!
               </p>
             </div>
           </div>

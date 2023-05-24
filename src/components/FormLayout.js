@@ -386,7 +386,7 @@ export default function FormLayout(props) {
                           Write below
                         </label>
                         <p className="mt-3 text-sm leading-6 text-gray-400">
-                          Describe what you're offering. Are you selling a product, a service, or maybe proposing a partnership? Your offer is the core of your email, so be clear and compelling.
+                          Describe what you&apos;re offering. Are you selling a product, a service, or maybe proposing a partnership? Your offer is the core of your email, so be clear and compelling.
                         </p>
                         <textarea
                           onChange={(e) => {
@@ -414,7 +414,7 @@ export default function FormLayout(props) {
                   <div className="col-span-full">
                     <p className="mt-3 text-sm leading-6 text-gray-400">
                       Give us a snapshot of your prospect. What industry are they in?
-                      What's their role? What challenges do they face?
+                      What&apos;s their role? What challenges do they face?
                       The more detailed and precise your description,
                       the better the AI can tailor the message.
                     </p>
@@ -537,7 +537,7 @@ export default function FormLayout(props) {
                         alt="rephrase"
                         className="cursor-pointer"
                       />
-                      <span className="sr-only">Download</span>
+                      <span className="sr-only">Copy</span>
                     </div>
                   </button>
                   <button

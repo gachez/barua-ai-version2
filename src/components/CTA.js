@@ -8,7 +8,7 @@ export default function CTA() {
             Give us a try
             </h2>
             <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-300">
-            Take Barua AI for a spin and discover how we're transforming the world of sales emails, one perfectly crafted message at a time!
+            Take Barua AI for a spin and discover how we&apos;re transforming the world of sales emails, one perfectly crafted message at a time!
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Link
