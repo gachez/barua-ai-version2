@@ -41,7 +41,7 @@ export default function NavBarTop(props) {
       "order":
           {
           "currency": "USD",
-          "account_number": localStorage.getItem('userAccount'),
+          "account_number": typeof window !== "undefined" ? localStorage.getItem('userAccount'): null,
           "amount": 39,
           "description": "Buy subscription",
           "billing_address": {
@@ -66,7 +66,7 @@ export default function NavBarTop(props) {
     .then(res => {
         setPaymentURI(res.data.redirect_url)
         // setMerchantID(res.data.merchant_reference)
-        localStorage.setItem('merchantID',res.data.merchant_reference)
+        typeof window !== "undefined" ? localStorage.setItem('merchantID',res.data.merchant_reference) : null
         setShowPaymentModal(true)
         makeOrder({
             merchantID:res.data.merchant_reference,
@@ -78,7 +78,7 @@ export default function NavBarTop(props) {
             currency: "USD",
             credits: 500,
             created:  `${new Date()}`,
-            accountNumber: localStorage.getItem('userAccount')
+            accountNumber: typeof window !== "undefined" ? localStorage.getItem('userAccount') : 'N/A'
         }).then(() => {
             setShowPaymentModal(true)
         })
@@ -94,21 +94,6 @@ export default function NavBarTop(props) {
     asPath,        // the value: "/question/how-do-you-get-the-current-url-in-nextjs/"
     pathname,   // the value: "/question/[slug]"
   } = useRouter();
-
-  function sendEmail(amount,credits,){
-    axios.post(`${Config.API_URI}/send-mail`,{
-        to:getSignedInUserCookie(),
-        bcc:"",
-        subject:`Order initiated!`,
-        message:  returnOrderEmail(JSON.parse(localStorage.getItem('user')).name,amount,localStorage.getItem('userAccount'),credits,'Buy subscription','incomplete')
-    })
-    .then(() => {
-        console.log('email sent')
-    })
-    .catch(err => {
-      console.log(err)
-    })
-  } 
 
   const userNavigation = [
     { name: 'Sign out', href: '/app/auth' },
