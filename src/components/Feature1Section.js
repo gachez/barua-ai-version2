@@ -1,31 +1,7 @@
 import { CloudArrowUpIcon, LockClosedIcon, ServerIcon } from '@heroicons/react/20/solid'
 import FeatureVid from '@/img/barua.gif'
 import Image from 'next/image'
-
-const features = [
-  {
-    name: "Provide your prospect's name",
-    description:
-      'No more generic emails. Personalization is the key to a response',
-    icon: CloudArrowUpIcon,
-  },
-  {
-    name: 'Detail your offer.',
-    description: "Whether it&apos;s a product, service, or partnership proposal, just give us the details.",
-    icon: LockClosedIcon,
-  },
-  {
-    name: 'Describe your prospect.',
-    description: "Help us understand who you&apos;re reaching out to, and we&apos;ll tailor the message to resonate with them.",
-    icon: ServerIcon,
-  },
-  {
-    name: 'Choose your tone.',
-    description: "Whether you prefer a formal, casual, or friendly tone, we&apos;ve got you covered.",
-    icon: ServerIcon,
-  },
-  
-]
+import Link from 'next/link'
 
 export default function Feature1Section() {
   return (
@@ -38,7 +14,13 @@ export default function Feature1Section() {
               <p className="mt-6 text-lg leading-8 text-gray-300">
               Say goodbye to repetitive typing. With Barua AI, you can save your offers for quick and easy email generation. Select a saved offer, and let our AI tool do the rest. It&apos;s time-saving functionality at its best!
               </p>
-            </div>
+            </div><br />
+            <Link
+                  href="/app/demo"
+                  className="rounded-full bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
+                >
+                  Try free
+            </Link>
           </div>
           <Image
             src={FeatureVid}

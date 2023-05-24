@@ -1,6 +1,6 @@
 import FeatureVid from '@/img/finetune.gif'
 import Image from 'next/image'
-
+import Link from 'next/link'
 
 export default function Feature3Section() {
   return (
@@ -13,7 +13,13 @@ export default function Feature3Section() {
               <p className="mt-6 text-lg leading-8 text-gray-300">
               Want to add a personal touch to your AI-generated emails? With our fine-tune feature, you can tweak your messages as needed, ensuring they perfectly align with your unique business communication style. It&apos;s your message, your way!
               </p>
-            </div>
+            </div><br />
+            <Link
+                  href="/app/demo"
+                  className="rounded-full bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
+                >
+                  Try free
+            </Link>
           </div>
           <Image
             src={FeatureVid}

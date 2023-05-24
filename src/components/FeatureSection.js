@@ -1,28 +1,28 @@
-import { CloudArrowUpIcon, LockClosedIcon, ServerIcon } from '@heroicons/react/20/solid'
+import { ServerIcon, FaceSmileIcon, BriefcaseIcon, InformationCircleIcon, SunIcon } from '@heroicons/react/20/solid'
 import FeatureVid from '@/img/baruavid.gif'
 import Image from 'next/image'
 
 const features = [
   {
-    name: "Provide your prospect&apos;s name",
+    name: `Provide your prospects name`,
     description:
       'No more generic emails. Personalization is the key to a response',
-    icon: CloudArrowUpIcon,
+    icon: FaceSmileIcon,
   },
   {
     name: 'Detail your offer.',
     description: "Whether it's a product, service, or partnership proposal, just give us the details.",
-    icon: LockClosedIcon,
+    icon: BriefcaseIcon,
   },
   {
     name: 'Describe your prospect.',
     description: "Help us understand who you&apos;re reaching out to, and we&apos;ll tailor the message to resonate with them.",
-    icon: ServerIcon,
+    icon: InformationCircleIcon,
   },
   {
     name: 'Choose your tone.',
     description: "Whether you prefer a formal, casual, or friendly tone, we&apos;ve got you covered.",
-    icon: ServerIcon,
+    icon: SunIcon,
   },
   
 ]

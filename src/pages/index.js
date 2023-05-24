@@ -19,6 +19,7 @@ import Feature4Section from '@/components/Feature4Section'
 
 const navigation = [
   { name: 'How it works', href: '#features' },
+  { name: 'Features', href: '#features' },
   { name: 'Pricing', href: '#pricing' },
   { name: 'Demo', href: '/app/demo' },
   { name: 'Blog', href: '#' },
@@ -38,8 +39,8 @@ export default function SuccessPayment() {
                 className="rounded-full"
                 src={LogoBlack}
                 alt=""
-                height={84}
-                width={84}
+                height={64}
+                width={64}
               />
             </a>
           </div>
@@ -61,9 +62,12 @@ export default function SuccessPayment() {
             ))}
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <Link href="/app/auth" className="text-sm font-semibold leading-6 text-white">
-              Log in <span aria-hidden="true">&rarr;</span>
-            </Link>
+            <button
+              type="button"
+              className="rounded-full bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Open app
+            </button>
           </div>
         </nav>
         <Dialog as="div" className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
@@ -71,11 +75,11 @@ export default function SuccessPayment() {
           <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-gray-900 px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-white/10">
             <div className="flex items-center justify-between">
               <a href="#" className="-m-1.5 p-1.5">
-                <span className="sr-only">Your Company</span>
+                <span className="sr-only">Barua AI</span>
                 <Image
                 className="rounded-full"
                 src={LogoBlack}
-                alt=""
+                alt="Barua AI"
                 height={64}
                 width={64}
               />
@@ -111,12 +115,12 @@ export default function SuccessPayment() {
                   </Link>
                 </div>
                 <div className="py-6">
-                  <Link
-                    href={"/app/auth"}
-                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-white hover:bg-gray-800"
-                  >
-                    Log in
-                  </Link>
+                <button
+                  type="button"
+                  className="rounded-full bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >
+                  Open app
+                </button>
                 </div>
               </div>
             </div>
@@ -148,13 +152,13 @@ export default function SuccessPayment() {
               </h1>
               <div className="mt-10 flex items-center justify-center gap-x-6">
                 <Link
-                  href="/app/auth"
+                  href="/app/demo"
                   className="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
                 >
-                  Get started
+                  Try free
                 </Link>
-                <Link href="/app/demo" className="text-sm font-semibold leading-6 text-white">
-                  Try demo <span aria-hidden="true">→</span>
+                <Link href="/app/auth" className="text-sm font-semibold leading-6 text-white">
+                  Register <span aria-hidden="true">→</span>
                 </Link>
               </div>
             </div>
@@ -171,8 +175,8 @@ export default function SuccessPayment() {
       <FeatureSection />
       <Feature4Section />
       <Feature3Section />
-      <Feature2Section />
       <Feature1Section />
+      <Feature2Section />
       <CTA />
       <Pricing />
       <FAQ />
