@@ -320,7 +320,7 @@ export default function FormLayout(props) {
                 {props.type === 'demo' ? 'Experience the Power of Barua AI' : 'Email Generator'}
               </h2>
               <p className="mt-1 text-sm leading-6 text-gray-400">
-                We need a few detals before we can make you an awesome message.
+                We need a few detals before we can make your awesome message.
               </p>
 
               <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
