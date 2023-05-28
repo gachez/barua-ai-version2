@@ -2,10 +2,12 @@ import User from '@/img/user.png'
 import Image from 'next/image'
 import React, { useEffect } from 'react'
 import { db } from '@/firebase.config'; 
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, doc, deleteDoc } from "firebase/firestore";
 import EmailModal from './EmailModal';
 import Link from 'next/link';
 import { LinearProgress, Alert } from '@mui/material';
+import DeleteModal from './DeleteModal';
+import { TrashIcon } from '@heroicons/react/24/outline';
 
 export default function EmailList() {
     const [showModal, setShowModal] = React.useState(false)
@@ -17,6 +19,7 @@ export default function EmailList() {
     const [showAlert, setShowAlert] = React.useState(false)
     const [alertSeverity, setAlertSeverity] = React.useState('error')
     const [alertText, setAlertText] = React.useState('')
+    const [deleteModal, setDeleteModal] = React.useState(false)
 
     function closeAlert(delay=3500){
       setTimeout(() => { 
@@ -38,11 +41,11 @@ export default function EmailList() {
           emailRefsL.push(doc.id)
           emailObjs.push({
             id: doc.id,
-            email: doc.data()
+            ...doc.data()
           })
         });
-        console.log(emailsFound)
-        setUserEmails(emailsFound)
+        console.log(emailObjs)
+        setUserEmails(emailObjs)
         setEmailRefs(emailRefsL)
         setEmailObjs(emailObjs)
         setLoadingBar(false)
@@ -63,6 +66,30 @@ export default function EmailList() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+    async function deleteEmail(documentId) { 
+      // Create a document reference
+      const documentRef = doc(db, 'userEmails', documentId);
+
+      // Delete the document
+      deleteDoc(documentRef)
+        .then(() => {
+          setDeleteModal(false)
+          setShowAlert(true)
+          setAlertSeverity('success')
+          setAlertText("Email deleted: ", documentRef.id);
+          getEmails()
+          closeAlert()
+        })
+        .catch((error) => {
+          console.error('Error deleting document:', error);
+          setDeleteModal(false)
+          setShowAlert(true)
+          setAlertSeverity('error')
+          setAlertText("Oops! Error occurred deleting your email");
+          closeAlert()
+      });
+    }
+
   return (
     <>
     <div className="bg-gray-900">
@@ -74,6 +101,13 @@ export default function EmailList() {
         null
       }
       <div className="mx-auto max-w-7xl">
+      {
+            showAlert
+            ?
+            <Alert style={{zIndex: 99}} severity={alertSeverity}>{alertText}</Alert>
+            :
+            null
+          }
         <div className="bg-gray-900 py-10">
           <div className="px-4 sm:px-6 lg:px-8">
             <div className="sm:flex sm:items-center">
@@ -117,7 +151,6 @@ export default function EmailList() {
                     <tbody className="divide-y divide-gray-800">
                       {userEmails.map((email,index) => (
                         <tr key={index} className='cursor-pointer' onClick={() => {
-                          setShowModal(true)
                           setSelectedEmail(email)
                         }} >
                           <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-white sm:pl-0">
@@ -128,11 +161,26 @@ export default function EmailList() {
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-300">{email?.createdAt?.slice(0,10)}</td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-300">      
                           <button
+                            onClick={() => {
+                              setShowModal(true)
+                            }}
                             type="button"
                             className="rounded-md bg-white/10 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-white/20"
                           >
                             View
                           </button></td>
+                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-300" >
+                            <button
+                              onClick={() => {
+                                setDeleteModal(true)
+                              }}
+                              type="button"
+                              className="rounded-md bg-white/10 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-white/20"
+                            >
+                              
+                            <TrashIcon width={16} height={16} />
+                            </button>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -150,6 +198,19 @@ export default function EmailList() {
         <EmailModal setShowModal={setShowModal} selectedEmail={selectedEmail} setSelectedEmail={setSelectedEmail} />
         :
         null
+    }
+    {
+      deleteModal
+      ?
+      <DeleteModal
+        open={deleteModal}
+        setOpen={setDeleteModal}
+        documentToDelete="email"
+        deleteDoc={deleteEmail}
+        selectedDoc={selectedEmail}
+      />
+      :
+      null
     }
     </>
   )

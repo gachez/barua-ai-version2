@@ -1,13 +1,12 @@
-import User from '@/img/user.png'
-import Image from 'next/image'
 import React, { useEffect } from 'react'
 import { db } from '@/firebase.config'; 
-import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
-import EmailModal from './EmailModal';
+import { collection, query, where, getDocs, addDoc, doc, deleteDoc, updateDoc } from "firebase/firestore";
 import Link from 'next/link';
 import { LinearProgress, Alert } from '@mui/material';
 import AddProspectModal from './AddProspectModal';
 import ProspectModal from './ProspectModal';
+import DeleteModal from './DeleteModal';
+import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 
 export default function ProspectList() {
     const [showModal, setShowModal] = React.useState(false)
@@ -22,6 +21,8 @@ export default function ProspectList() {
     const [showAlert, setShowAlert] = React.useState(false)
     const [alertSeverity, setAlertSeverity] = React.useState('error')
     const [alertText, setAlertText] = React.useState('')
+    const [edit, setEdit] = React.useState(false)
+    const [deleteModal, setDeleteModal] = React.useState(false)
 
     function closeAlert(delay=3500){
       setTimeout(() => { 
@@ -43,11 +44,11 @@ export default function ProspectList() {
           emailRefsL.push(doc.id)
           emailObjs.push({
             id: doc.id,
-            email: doc.data()
+            ...doc.data()
           })
         });
-        console.log(emailsFound)
-        setUserEmails(emailsFound)
+        console.log(emailObjs)
+        setUserEmails(emailObjs)
         setEmailRefs(emailRefsL)
         setEmailObjs(emailObjs)
         setLoadingBar(false)
@@ -93,6 +94,56 @@ export default function ProspectList() {
         getProspects()
         // eslint-disable-next-line react-hooks/exhaustive-deps        
     }, [])
+
+    async function deleteProspects(documentId) { 
+      // Create a document reference
+      const documentRef = doc(db, 'userProspects', documentId);
+
+      // Delete the document
+      deleteDoc(documentRef)
+        .then(() => {
+          setDeleteModal(false)
+          setShowAlert(true)
+          setAlertSeverity('success')
+          setAlertText("Prospect deleted: ", documentRef.id);
+          getProspects()
+          closeAlert()
+        })
+        .catch((error) => {
+          console.error('Error deleting document:', error);
+          setDeleteOfferModal(false)
+          setShowAlert(true)
+          setAlertSeverity('error')
+          setAlertText("Oops! Error occurred deleting prospect");
+          closeAlert()
+      });
+    }
+
+    async function editProspect(documentId, updates){
+      setLoadingBar(true)
+      // Create a document reference
+      const documentRef = doc(db, 'userProspects', documentId);
+
+      // Update the document
+      updateDoc(documentRef, updates)
+        .then(() => {
+          setShowAlert(true)
+          setAlertSeverity('success')
+          setAlertText("Prospect edited: ", documentRef.id);
+          setShowAddProspectListModal(false)
+          getProspects()
+          setLoadingBar(false)
+          closeAlert()
+        })
+        .catch((error) => {
+          console.error('Error updating document:', error);
+          setShowAddProspectListModal(false)
+          setShowAlert(true)
+          setAlertSeverity('error')
+          setAlertText("Oops! Error occurred deleting your prospect");
+          setLoadingBar(false)
+        });
+    }
 
   return (
     <>
@@ -159,7 +210,6 @@ export default function ProspectList() {
                     <tbody className="divide-y divide-gray-800">
                       {userEmails.map((email,index) => (
                         <tr className='cursor-pointer' key={index} onClick={() => {
-                          setShowModal(true)
                           setSelectedProspect(email)
                         }} >
                           <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-white sm:pl-0">
@@ -168,11 +218,39 @@ export default function ProspectList() {
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-300">{email?.prospectDescription?.slice(0,80)}...</td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-300">      
                           <button
+                            onClick={() => {
+                              setShowModal(true)
+                            }}
                             type="button"
                             className="rounded-md bg-white/10 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-white/20"
                           >
                             View
                           </button></td>
+                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-300" >
+                            <button
+                              onClick={() => {
+                                setEdit(true)
+                                setShowAddProspectListModal(true)
+                              }}
+                              type="button"
+                              className="rounded-md bg-white/10 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-white/20"
+                            >
+                              
+                            <PencilSquareIcon width={16} height={16} />
+                            </button>
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-300" >
+                            <button
+                              onClick={() => {
+                                setDeleteModal(true)
+                              }}
+                              type="button"
+                              className="rounded-md bg-white/10 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-white/20"
+                            >
+                              
+                            <TrashIcon width={16} height={16} />
+                            </button>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -206,6 +284,22 @@ export default function ProspectList() {
         alertSeverity={alertSeverity}
         alertText={alertText}
         saveProspect={saveProspect}
+        edit={edit}
+        editProspect={editProspect}
+        selectedProspect={selectedProspect}
+      />
+      :
+      null
+    }
+    {
+      deleteModal
+      ?
+      <DeleteModal
+        open={deleteModal}
+        setOpen={setDeleteModal}
+        documentToDelete="prospect"
+        deleteDoc={deleteProspects}
+        selectedDoc={selectedProspect}
       />
       :
       null

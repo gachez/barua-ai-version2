@@ -2,13 +2,13 @@ import User from '@/img/user.png'
 import Image from 'next/image'
 import React, { useEffect } from 'react'
 import { db } from '@/firebase.config'; 
-import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
-import EmailModal from './EmailModal';
-import Link from 'next/link';
+import { collection, query, where, getDocs, addDoc, doc, deleteDoc, updateDoc } from "firebase/firestore";
 import OfferModal from './OfferModal';
 import TextAreaModal from './TextAreaModal';
 import { getSignedInUserCookie } from '@/utils';
 import { LinearProgress, Alert } from '@mui/material';
+import { TrashIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
+import DeleteModal from './DeleteModal';
 
 // some wierd variable names going on here - Will fix later
 export default function OfferList() {
@@ -24,6 +24,8 @@ export default function OfferList() {
     const [showAlert, setShowAlert] = React.useState(false)
     const [alertSeverity, setAlertSeverity] = React.useState('success')
     const [alertText, setAlertText] = React.useState('')
+    const [deleteOfferModal, setDeleteOfferModal] = React.useState(false)
+    const [edit, setEdit] = React.useState(false)
 
     function closeAlert(delay=3500){
       setTimeout(() => { 
@@ -45,11 +47,11 @@ export default function OfferList() {
           emailRefsL.push(doc.id)
           emailObjs.push({
             id: doc.id,
-            email: doc.data()
+            ...doc.data()
           })
         });
-        console.log(emailsFound)
-        setUserEmails(emailsFound)
+        console.log(emailObjs)
+        setUserEmails(emailObjs)
         setEmailRefs(emailRefsL)
         setEmailObjs(emailObjs)
         setLoadingBar(false)
@@ -93,6 +95,56 @@ export default function OfferList() {
         closeAlert()
         setLoadingBar(false)
       }
+    }
+
+    async function deleteOffer(documentId) { 
+      // Create a document reference
+      const documentRef = doc(db, 'userOffers', documentId);
+
+      // Delete the document
+      deleteDoc(documentRef)
+        .then(() => {
+          setDeleteOfferModal(false)
+          setShowAlert(true)
+          setAlertSeverity('success')
+          setAlertText("Offer deleted: ", documentRef.id);
+          getOffers()
+          closeAlert()
+        })
+        .catch((error) => {
+          console.error('Error deleting document:', error);
+          setDeleteOfferModal(false)
+          setShowAlert(true)
+          setAlertSeverity('error')
+          setAlertText("Oops! Error occurred deleting your offer");
+          closeAlert()
+      });
+    }
+
+    async function editOffer(documentId, updates){
+      setLoadingBar(true)
+      // Create a document reference
+      const documentRef = doc(db, 'userOffers', documentId);
+
+      // Update the document
+      updateDoc(documentRef, updates)
+        .then(() => {
+          setShowAlert(true)
+          setAlertSeverity('success')
+          setAlertText("Offer edited: ", documentRef.id);
+          setShowAddOfferModal(false)
+          getOffers()
+          setLoadingBar(false)
+          closeAlert()
+        })
+        .catch((error) => {
+          console.error('Error updating document:', error);
+          setShowAddOfferModal(false)
+          setShowAlert(true)
+          setAlertSeverity('error')
+          setAlertText("Oops! Error occurred deleting your offer");
+          setLoadingBar(false)
+        });
     }
 
   return (
@@ -157,25 +209,52 @@ export default function OfferList() {
                     <tbody className="divide-y divide-gray-800">
                       {userEmails.map((email,index) => (
                         <tr key={index} className='cursor-pointer' onClick={() => {
-                          setShowModal(true)
                           setSelectedEmail(email)
                         }} >
                           <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-white sm:pl-0">
                             {email?.name}
                           </td>
                           <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-white sm:pl-0">
-                            {email?.offer.slice(0,100)}...
+                            {email?.offer.slice(0,50)}...
                           </td>
                           <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-white sm:pl-0">
                             {email?.createdAt?.slice(0,10)}
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-300">      
                           <button
+                            onClick={() => {
+                              setShowModal(true)
+                            }}
                             type="button"
                             className="rounded-md bg-white/10 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-white/20"
                           >
                             View
                           </button></td>
+                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-300" >
+                            <button
+                              onClick={() => {
+                                setEdit(true)
+                                setShowAddOfferModal(true)
+                              }}
+                              type="button"
+                              className="rounded-md bg-white/10 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-white/20"
+                            >
+                              
+                            <PencilSquareIcon width={16} height={16} />
+                            </button>
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-300" >
+                            <button
+                              onClick={() => {
+                                setDeleteOfferModal(true)
+                              }}
+                              type="button"
+                              className="rounded-md bg-white/10 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-white/20"
+                            >
+                              
+                            <TrashIcon width={16} height={16} />
+                            </button>
+                          </td>
                         </tr>
                       )).reverse()}
                     </tbody>
@@ -211,12 +290,29 @@ export default function OfferList() {
           loadingBar={loadingBar} 
           setLoadingBar={setLoadingBar} 
           setNewOffer={setNewOffer} 
+          edit={edit}
           type="offer" 
           setOpen={setShowAddOfferModal} 
           closeAlert={closeAlert}
-          open={showAddOfferModal} />
+          open={showAddOfferModal}
+          editOffer={editOffer}
+          selectedOffer={selectedEmail}
+          />
         :
         null
+    }
+    {
+      deleteOfferModal
+      ?
+      <DeleteModal
+        open={deleteOfferModal}
+        setOpen={setDeleteOfferModal}
+        documentToDelete="offer"
+        deleteDoc={deleteOffer}
+        selectedDoc={selectedEmail}
+      />
+      :
+      null
     }
     </>
   )

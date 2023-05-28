@@ -25,9 +25,9 @@ export default function TextArea(props) {
           onChange={(e) => {
             props.setOfferName(e.target.value)
           }}
-          rows={1}
           name="Name"
           id="name"
+          value={props.edit?props.offerName:props.selectedOffer.name}
           className="block w-full resize-none border-0 py-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
           placeholder={"Give your offer a name"}
           defaultValue={''}
@@ -43,12 +43,13 @@ export default function TextArea(props) {
             }
             props.setNewOffer(e.target.value)
           }}
-          rows={8}
+          rows={12}
           name="Offer"
           id="offer"
           className="block w-full resize-none border-0 py-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
           placeholder={props.type === "offer" ? "Write an offer..." : "Add further instructions to customize your message to your preference"}
           defaultValue={''}
+          value={props.edit?(props.type==="offer"?props.newOffer:props.instruction):props.selectedOffer.offer}
         />
 
         {/* Spacer element to match the height of the toolbar */}
