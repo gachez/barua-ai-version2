@@ -1,7 +1,7 @@
 "use client"
 import LogoBlack from '@/img/logo-black.png'
 import Image from 'next/image'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { generateAccountNumber, getSignedInUserCookie, setSignedInUserCookie  } from '@/utils'
 import { auth } from "@/firebase.config";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
@@ -33,7 +33,7 @@ export default function Auth() {
   const [showAlert, setShowAlert] = React.useState(false)
   const [alertSeverity, setAlertSeverity] = React.useState('success')
   const [alertText, setAlertText] = React.useState('Success! signed in succesfully.')  
-  
+
     async function createUser (firstName, email){
       try {
           const accNumber = generateAccountNumber()
