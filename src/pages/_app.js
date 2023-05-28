@@ -1,5 +1,4 @@
 import '@/styles/globals.css'
-import { hotjar } from '../../lib/react-hotjar'
 import { useEffect } from 'react'
 import * as gtag from "../gtag"
 import Script from "next/script"
@@ -16,9 +15,6 @@ export default function App({ Component, pageProps }) {
       router.events.off("routeChangeComplete", handleRouteChange)
     }
   }, [router.events])
-  useEffect(() => {
-    hotjar.initialize(3312000, 6)
-  })
   return (
   <>
       <Script
