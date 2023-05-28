@@ -7,8 +7,15 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import BuyCreditsModal from "@/components/BuyCreditModal";
 import { LinearProgress } from "@mui/material";
+
+const CrispWithNoSSR = dynamic(
+  () => import('../components/crisp'),
+  { ssr: false }
+)
+
 const NavBarTop = dynamic(()=>import("@/components/NavBarTop"))
 const DashboardComponent = dynamic(() => import("@/components/Dashboard"))
+
 
 export default function Dashboard() {
   const router = useRouter();
@@ -108,6 +115,7 @@ export default function Dashboard() {
               :
               null
             }
+            <CrispWithNoSSR />
         </div>
         </>
     )

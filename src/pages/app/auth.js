@@ -14,6 +14,13 @@ import Alert from '@mui/material/Alert'
 import Google from '@/img/search.png';
 import Footer from '@/components/Footer';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import dynamic from 'next/dynamic'
+
+const CrispWithNoSSR = dynamic(
+  () => import('../components/crisp'),
+  { ssr: false }
+)
+
 
 
 export default function Auth() {
@@ -360,6 +367,7 @@ export default function Auth() {
             </p>
           </div>
         </div>
+        <CrispWithNoSSR />
         <Footer />
       </>
     )

@@ -6,6 +6,10 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import Image from 'next/image';
 import { Dialog } from '@headlessui/react'
+const CrispWithNoSSR = dynamic(
+  () => import('../components/crisp'),
+  { ssr: false }
+)
 
 const FormLayout = dynamic(() => import("@/components/FormLayout"), {ssr: false})
 const Banner = dynamic(() => import("@/components/Banner"), {ssr: false})
@@ -121,6 +125,7 @@ export default function Demo() {
             </div>
             <Footer />
             </main>
+            <CrispWithNoSSR />
         </>
     )
 }

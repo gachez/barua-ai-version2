@@ -2,6 +2,11 @@
 import React from "react";
 import dynamic from "next/dynamic";
 import { LinearProgress } from "@mui/material";
+
+const CrispWithNoSSR = dynamic(
+  () => import('../components/crisp'),
+  { ssr: false }
+)
 const NavBarTop = dynamic(() => import("@/components/NavBarTop"), {ssr: false})
 const FormLayout = dynamic(() => import("@/components/FormLayout"), {ssr: false})
 const BuyCreditsModal = dynamic(() => import("@/components/BuyCreditModal"), {ssr: false})
@@ -29,6 +34,7 @@ export default function Generator() {
                 null
                 }
           </div>
+          <CrispWithNoSSR />
         </>
     )
 }

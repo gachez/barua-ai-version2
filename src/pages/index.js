@@ -16,6 +16,12 @@ import Feature1Section from '@/components/Feature1Section'
 import Feature2Section from '@/components/Feature2Section'
 import Feature3Section from '@/components/Feature3Section'
 import Feature4Section from '@/components/Feature4Section'
+import dynamic from 'next/dynamic'
+
+const CrispWithNoSSR = dynamic(
+  () => import('../components/crisp'),
+  { ssr: false }
+)
 
 const navigation = [
   { name: 'How it works', href: '#features' },
@@ -181,6 +187,7 @@ export default function SuccessPayment() {
       <Pricing />
       <FAQ />
       <LandingFooter />
+      <CrispWithNoSSR />
     </div>
   )
 }

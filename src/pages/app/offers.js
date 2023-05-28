@@ -3,6 +3,10 @@ import React from "react";
 import dynamic from "next/dynamic";
 import { LinearProgress } from "@mui/material";
 
+const CrispWithNoSSR = dynamic(
+  () => import('../components/crisp'),
+  { ssr: false }
+)
 const NavBarTop = dynamic(()=>import("@/components/NavBarTop"))
 const OfferList = dynamic(()=>import("@/components/OfferList"))
 const BuyCreditsModal = dynamic(() => import("@/components/BuyCreditModal"))
@@ -29,6 +33,7 @@ export default function Offers() {
                 null
                 }
             </div>
+            <CrispWithNoSSR />
         </>
     )
 }
