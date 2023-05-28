@@ -1,14 +1,13 @@
-import React, { Component } from "react";
+import React from "react";
 
 import { Crisp } from "crisp-sdk-web";
 
-class CrispChat extends Component {
-  componentDidMount () {
-    Crisp.configure("MY_CRISP_WEBSITE_ID");
-  }
 
-  render () {
-    return null;
-  }
+export default function CrispChat(){
+  React.useEffect(() => {
+    Crisp.configure("MY_CRISP_WEBSITE_ID");
+  }, [])
+  
+  return null;
+  
 }
-export default CrispChat

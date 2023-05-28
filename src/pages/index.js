@@ -19,7 +19,7 @@ import Feature4Section from '@/components/Feature4Section'
 import dynamic from 'next/dynamic'
 
 const CrispWithNoSSR = dynamic(
-  () => import('../components/CrispChat'),
+  () => import('@/components/CrispChat'),
   { ssr: false }
 )
 

@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 
 const CrispWithNoSSR = dynamic(
-  () => import('../components/crisp'),
+  () => import('@/components/CrispChat'),
   { ssr: false }
 )
 

@@ -7,7 +7,7 @@ import Link from 'next/link'
 import Image from 'next/image';
 import { Dialog } from '@headlessui/react'
 const CrispWithNoSSR = dynamic(
-  () => import('../components/CrispChat'),
+  () => import('@/components/CrispChat'),
   { ssr: false }
 )
 

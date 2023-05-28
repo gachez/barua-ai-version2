@@ -17,7 +17,7 @@ import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import dynamic from 'next/dynamic'
 
 const CrispWithNoSSR = dynamic(
-  () => import('../components/CrispChat'),
+  () => import('@/components/CrispChat'),
   { ssr: false }
 )
 

@@ -9,7 +9,7 @@ import BuyCreditsModal from "@/components/BuyCreditModal";
 import { LinearProgress } from "@mui/material";
 
 const CrispWithNoSSR = dynamic(
-  () => import('../components/CrispChat'),
+  () => import('@/components/CrispChat'),
   { ssr: false }
 )
 
