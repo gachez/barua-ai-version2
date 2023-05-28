@@ -24,14 +24,14 @@ import Link from 'next/link'
     },
     {
       title: 'Offer',
-      href: '#',
+      href: '/app/offers',
       icon: FolderIcon,
       iconForeground: 'text-sky-700',
       iconBackground: 'bg-sky-50',
     },
     {
       title: 'Database',
-      href: '#',
+      href: '/app/database',
       icon: Square3Stack3DIcon,
       iconForeground: 'text-yellow-700',
       iconBackground: 'bg-yellow-50',
