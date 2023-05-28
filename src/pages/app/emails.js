@@ -3,7 +3,7 @@ import React from "react";
 import dynamic from "next/dynamic";
 import { LinearProgress } from "@mui/material";
 const CrispWithNoSSR = dynamic(
-  () => import('../components/crisp'),
+  () => import('../components/CrispChat'),
   { ssr: false }
 )
 const NavBarTop = dynamic(()=>import("@/components/NavBarTop"),{ssr:false})
