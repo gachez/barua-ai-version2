@@ -152,7 +152,7 @@ export default function Auth() {
         :
         null
       }
-        <div style={{opacity: isLoading?0.1:1}} className="bg-gray-900 flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+        <div style={{opacity: isLoading?0.1:1}} className="bg-gray-950 flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
             <Link href={"/"} >
               <Image
