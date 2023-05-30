@@ -48,6 +48,7 @@ export default function Auth() {
           });
           console.log("User created with ID: ", docRef.id);
           window.localStorage.setItem('userAccount',accNumber)
+          setSignedInUserCookie(email)
           router.push('/app/dashboard')
           setIsLoading(false)
         } catch (e) {
