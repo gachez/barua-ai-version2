@@ -164,7 +164,7 @@ export default function Auth() {
               />
             </Link>
             <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white">
-              Sign in to your account
+              {isSignIn?'Sign in to your account':'Create your account'}
             </h2>
           </div>
   
