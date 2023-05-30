@@ -27,7 +27,6 @@ const navigation = [
   { name: 'How it works', href: '#features' },
   { name: 'Features', href: '#features' },
   { name: 'Pricing', href: '#pricing' },
-  { name: 'Demo', href: '/app/demo' },
   { name: 'Blog', href: '#' },
 ]
 
@@ -68,6 +67,12 @@ export default function SuccessPayment() {
             ))}
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+            <Link
+              href={"/app/demo"}
+              className="rounded-full bg-green-600 px-4 py-2.5 text-sm mx-4 font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+            >
+              Demo
+            </Link>
             <Link
               href={"/app/auth"}
               className="rounded-full bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"

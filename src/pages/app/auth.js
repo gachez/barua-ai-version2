@@ -25,7 +25,7 @@ const CrispWithNoSSR = dynamic(
 
 export default function Auth() {
   const router = useRouter();
-  const [isSignIn, setIsSignIn] = React.useState(true)
+  const [isSignIn, setIsSignIn] = React.useState(false)
   const [email, setEmail] = React.useState('')
   const [password, setPassword] = React.useState('')
   const [firstName, setFirstName] = React.useState('')
