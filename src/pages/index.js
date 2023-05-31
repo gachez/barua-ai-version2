@@ -122,7 +122,7 @@ export default function SuccessPayment() {
                     href={"/app/auth"}
                     className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-white hover:bg-gray-800"
                   >
-                    Demo
+                    Generate now
                   </Link>
                 </div>
                 <div className="py-6">
@@ -156,7 +156,7 @@ export default function SuccessPayment() {
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
               <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
-              AI-Powered Sales Email Generation 
+              Generate high converting sales emails in seconds
               </h1>
               <h1 className="mt-6 text-lg leading-8 text-gray-300">
               We leverage cutting-edge artificial intelligence to generate personalized, high-quality sales emails that truly convert.
