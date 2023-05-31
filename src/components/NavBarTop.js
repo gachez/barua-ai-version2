@@ -291,7 +291,7 @@ export default function NavBarTop(props) {
                   null
                   :
                   <Link
-                  href="https://baruaai.lemonsqueezy.com/checkout/buy/66eb5f46-2783-452d-a9ca-35b8ef143062?discount=0"
+                  href="https://baruaai.lemonsqueezy.com/checkout/buy/4fecac99-d5de-42fe-a6d6-9a1060b51d05?discount=0"
                   className="lemonsqueezy-button hidden sm:inline-flex  items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                   >
                     <BoltIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />

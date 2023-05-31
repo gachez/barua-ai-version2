@@ -13,9 +13,9 @@ import Config from '@/config'
 import Link from 'next/link'
 
 const plans = [
-  { name: 'Starter Bundle', description: "You'll receive 100 credits, giving you the freedom to explore our AI tool and discover its potential.", price: '$10', url: 'https://baruaai.lemonsqueezy.com/checkout/buy/b4d7c35f-3f8b-4608-a0cd-af21b1543e2b?discount=0' },
-  { name: 'Growth Bundle', description: 'Our Growth Bundle gives you 500 credits, providing the fuel you need to expand your outreach and grow your audience.', price: '$50', url: 'https://baruaai.lemonsqueezy.com/checkout/buy/7cfa3056-2d38-4232-9111-fd0c5a789809?discount=0' },
-  { name: 'Pro Bundle', description: "For the seasoned professionals out there, we have the Pro Bundle. You'll get 1,000 credits - perfect for those ready to take their digital communication strategy to the next level.", price: '$100', url: 'https://baruaai.lemonsqueezy.com/checkout/buy/4b105fc7-30b4-4904-bff1-120aac78a987?discount=0' },
+  { name: 'Starter Bundle', description: "You'll receive 100 credits, giving you the freedom to explore our AI tool and discover its potential.", price: '$10', url: 'https://baruaai.lemonsqueezy.com/checkout/buy/b717983d-0a2e-4b7a-ad29-253ccf7c71ac?discount=0' },
+  { name: 'Growth Bundle', description: 'Our Growth Bundle gives you 500 credits, providing the fuel you need to expand your outreach and grow your audience.', price: '$50', url: 'https://baruaai.lemonsqueezy.com/checkout/buy/b3468dc7-1c74-40e0-b250-49da86b72c0b?discount=0' },
+  { name: 'Pro Bundle', description: "For the seasoned professionals out there, we have the Pro Bundle. You'll get 1,000 credits - perfect for those ready to take their digital communication strategy to the next level.", price: '$100', url: 'https://baruaai.lemonsqueezy.com/checkout/buy/dd668f7a-4802-45c3-bb6f-e4a5ffef4dd3?discount=0' },
 ]
 
 export default function BuyCreditsModal(props) {
