@@ -37,6 +37,11 @@ export default function App({ Component, pageProps }) {
         }}
       />
       <Script
+        id="ls"
+        strategy='afterInteractive'
+        src='https://assets.lemonsqueezy.com/lemon.js'
+      />
+      <Script
         id="hotjar"
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{

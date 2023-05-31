@@ -49,7 +49,11 @@ export default function TextArea(props) {
           className="block w-full resize-none border-0 py-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
           placeholder={props.type === "offer" ? "Write an offer..." : "Add further instructions to customize your message to your preference"}
           defaultValue={''}
-          value={props.edit?(props.type==="offer"?props.newOffer:props.instruction):props.selectedOffer.offer}
+          value={
+            props.edit 
+            ? (props.type === "offer" ? props.newOffer : props.instruction)
+            : (props.type === "tune" ? props.instruction : props.selectedOffer.offer)
+          }
         />
 
         {/* Spacer element to match the height of the toolbar */}

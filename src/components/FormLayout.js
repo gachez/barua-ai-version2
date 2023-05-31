@@ -41,6 +41,7 @@ export default function FormLayout(props) {
   const [targetName, setTargetName] = React.useState("");
   const [productDesc, setProductDesc] = React.useState("");
   const [targetDesc, setTargetDesc] = React.useState("");
+  const [userEmails, setUserEmails] = React.useState([]);
   const [mood, setMood] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [loaded, setLoaded] = React.useState(false);
@@ -93,8 +94,44 @@ export default function FormLayout(props) {
       })
   }
 
+  async function getEmails(){
+    const userEmail = JSON.parse(localStorage.getItem('user'))?.email
+    try {
+        let emailObjs = []
+        let emailsFound = []
+        let emailRefsL = []
+    const q = query(collection(db, "userEmails"), where("userId", "==", userEmail));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      emailsFound.push(doc.data())
+      emailRefsL.push(doc.id)
+      emailObjs.push({
+        id: doc.id,
+        ...doc.data()
+      })
+    });
+    console.log(emailObjs)
+    setUserEmails(emailObjs)
+    closeAlert()
+    } catch (error) {
+        console.error(error)
+        setShowAlert(true)
+        setAlertStatus('error')
+        setAlertText('Something went wrong fetching your emails')
+        setLoadingBar(false)
+        closeAlert()
+    }
+  }
+
   async function saveEmail() {
     setLoadingBar(true)
+    if(JSON.parse(localStorage.getItem('user')).isSubscribed === false && userEmails.length >= 100){
+      setAlertStatus('error')
+      setAlertText('Error occured saving message! Please upgrade to save more emails.')
+      setShowFormAlert(true)
+      closeAlert()
+      return
+    }
     try {
       const docRef = await addDoc(collection(db, "userEmails"), {
         userId: JSON.parse(localStorage.getItem('user'))?.email,
@@ -185,6 +222,7 @@ export default function FormLayout(props) {
   React.useEffect(() => {
     setIsFormReady(true);
     getOffers()
+    getEmails()
     getProspects()
     getUser()
   }, [])
@@ -192,6 +230,13 @@ export default function FormLayout(props) {
 
   function generateEmail() {
     setGeneratedEmail('')
+    const creditsAvailable = JSON.parse(localStorage.getItem('user'))?.creditsAvailable
+    if(creditsAvailable === 0) {
+      setAlertText('You have run out of credits. Please upgrade or buy more to generate.');
+      setAlertStatus('error')
+      setShowAlert(true)
+      closeAlert()
+    }
     window.location.href = '#'
     setLoading(true);
     axios

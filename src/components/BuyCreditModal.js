@@ -10,12 +10,12 @@ import { getSignedInUserCookie, returnOrderEmail } from '@/utils'
 import PaymentUI from './PaymentModal'
 import axios from 'axios'
 import Config from '@/config'
+import Link from 'next/link'
 
 const plans = [
-  { name: 'Starter Bundle', description: "You'll receive 100 credits, giving you the freedom to explore our AI tool and discover its potential.", price: '$10' },
-  { name: 'Growth Bundle', description: 'Our Growth Bundle gives you 500 credits, providing the fuel you need to expand your outreach and grow your audience.', price: '$50' },
-  { name: 'Pro Bundle', description: "For the seasoned professionals out there, we have the Pro Bundle. You'll get 1,000 credits - perfect for those ready to take their digital communication strategy to the next level.", price: '$100' },
-  { name: 'Elite Bundle', description: "This package offers a whopping 2,000 credits, providing the best value and enabling you to fully leverage the power of Barua AI.", price: '$200' },
+  { name: 'Starter Bundle', description: "You'll receive 100 credits, giving you the freedom to explore our AI tool and discover its potential.", price: '$10', url: 'https://baruaai.lemonsqueezy.com/checkout/buy/b4d7c35f-3f8b-4608-a0cd-af21b1543e2b?discount=0' },
+  { name: 'Growth Bundle', description: 'Our Growth Bundle gives you 500 credits, providing the fuel you need to expand your outreach and grow your audience.', price: '$50', url: 'https://baruaai.lemonsqueezy.com/checkout/buy/7cfa3056-2d38-4232-9111-fd0c5a789809?discount=0' },
+  { name: 'Pro Bundle', description: "For the seasoned professionals out there, we have the Pro Bundle. You'll get 1,000 credits - perfect for those ready to take their digital communication strategy to the next level.", price: '$100', url: 'https://baruaai.lemonsqueezy.com/checkout/buy/4b105fc7-30b4-4904-bff1-120aac78a987?discount=0' },
 ]
 
 export default function BuyCreditsModal(props) {
@@ -155,16 +155,17 @@ export default function BuyCreditsModal(props) {
                 </div><br />
                 <CreditOptions plans={plans} selected={selected} setSelected={setSelected} />
                 <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
-                  <button
-                    type="button"
+                  {/* <Link
+                    href={selected.}
                     className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 sm:col-start-2"
-                    onClick={() => {
-                      console.log('You have selected the ', selected.name)
-                      startPayment()
-                    }}
                   >
                     Purchase
-                  </button>
+                  </Link> */}
+                  <Link
+                    href={selected.url} 
+                    className="lemonsqueezy-button inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 sm:col-start-2">
+                      Purchase
+                  </Link>
                   <button
                     type="button"
                     className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:col-start-1 sm:mt-0"

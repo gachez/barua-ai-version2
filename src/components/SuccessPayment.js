@@ -14,132 +14,73 @@ export default function SuccessPayment() {
   const [gottenOrder,setGottenOrder] = React.useState()
   const [docum,setDocum] = React.useState('')
   const [loading,setLoading] = React.useState(true)
-  const [userDocumentRef,setUserDocumentRef] = React.useState('')
   const [pageHeadline,setPageHeadline] = React.useState('10 credits have been added to your account!')
   const [pageTitle,setPageTitle] = React.useState('🥂 Purchase completed')
   const cancelButtonRef = useRef(null)
 
-  async function editOrder(documentRef){
-   console.log('This is the order ', gottenOrder)
-   const userRef = doc(db, "orders", documentRef);
-   try {
-       await updateDoc(userRef, {
-       status: 'complete'
-       }).then(() => {
-         console.log('success')
-         editUser(userDocumentRef,gottenOrder.credits)
-       })
-   } catch (error) {
-       console.error(error)
-       alert(error)
-   }
- }
  async function getUser(){
    try {
    const q = query(collection(db, "users"), where("email", "==", getSignedInUserCookie()));
    const querySnapshot = await getDocs(q);
+   let userReference
    querySnapshot.forEach((doc) => {
      window.localStorage.setItem('user',JSON.stringify(doc.data()))
-     setUserDocumentRef(`${doc.id}`)
+     userReference = doc.id
    });
       // Call getTransactionStatus function here after user data has been fetched
-      getTransactionStatus();  
+      determinePayment(userReference)
    } catch (error) {
      console.error(error)
      alert(error)
    }
  }
 
- async function editUser(documentRef,credits){
-   const userRef = doc(db, "users", documentRef);
-   const updates = {
-           creditsAvailable: gottenOrder.type ==='subscription'?parseInt(JSON.parse(localStorage.getItem('user'))?.creditsAvailable) + parseInt(credits):parseInt(JSON.parse(localStorage.getItem('user'))?.creditsAvailable)+gottenOrder.credits,
-           isSubscribed: gottenOrder.type ==='subscription'
-       }
-   try {
-       await updateDoc(userRef, updates );
-       if(gottenOrder.type ==='subscription'){
-         setPageTitle('Subscription confirmed. Cancel anytime')
-         setPageHeadline('Credits have been deposited to your account. Enjoy!')
-       }
-       sendEmail(gottenOrder.amount,gottenOrder.credits)
-       setPageTitle('🥂 Purchase complete')
-       setPageHeadline('Succesfully added '+credits+' credits to your account')
-       setLoading(false)
-   } catch (error) {
-       console.error(error)
-       alert(error)
-   }
- }
-
-  async function getOrder(){
-    console.log('getOrder is called')
-   const merchantID = localStorage.getItem('merchantID')
-   try {
-   let id
-   let gottenOrders
-   const q = query(collection(db, "orders"), where("merchantID", "==", merchantID));
-   const querySnapshot = await getDocs(q);
-   querySnapshot.forEach((doc) => {
-     setDocum(`${doc.id}`)
-     id = doc.id
-     gottenOrders = doc.data()
-   });
-   setGottenOrder(gottenOrders)
-   } catch (error) {
-     alert(error)
-   }
-  }
-  function sendEmail(amount,credits,){
-   axios.post(`${Config.API_URI}/send-mail`,{
-       to:getSignedInUserCookie(),
-       bcc:"",
-       subject:`Order complete 🎉!`,
-       message:  returnOrderEmail(JSON.parse(localStorage.getItem('user')).name,amount,localStorage.getItem('userAccount'),credits,'Buy credits','complete')
-   })
-   .then(() => {
-       console.log('email sent')
-   })
-   .catch(err => {
-       alert(err)
-   })
-  }
-
-  async function determineOrder(res){
-   if(res.data.status === '200'){
-     await getOrder()
-     return
-    }
-    alert('We couldnt complete your payment')
-  }
- 
-  function getTransactionStatus(){
-   console.log('transaction status called') 
-   const orderId = getParameterByName('OrderTrackingId')
-   axios.get(`${Config.API_URI}/get-transaction-status?orderTrackingId=${orderId}`)
-   .then(res => {
-     determineOrder(res)
-   })
-   .catch(err => {
-       alert(err)
-   })
-  }
-
-
-  async function fetchOrderAndUpdate(){
-    await getOrder(); 
-    editOrder(docum);
-  }
-  
   React.useEffect(() => {
     getUser();
   },[])
   
-  React.useEffect(() => {
-    if(docum) {
-      fetchOrderAndUpdate();
-    }
-  },[docum])
+  async function determinePayment(userDocumentRef){
+    try {
+      const userRef = doc(db, "users", userDocumentRef);
+      const type = getParameterByName('type')
+      const variant = getParameterByName('variant')
+      let updates
+  
+      if (type === 'onetime' && variant === 'starter'){
+        updates = {
+          creditsAvailable: parseInt(JSON.parse(localStorage.getItem('user'))?.creditsAvailable) + 100
+        }
+      }
+      if (type === 'onetime' && variant === 'growth'){
+        updates = {
+          creditsAvailable: parseInt(JSON.parse(localStorage.getItem('user'))?.creditsAvailable) + 500
+        }
+      }
+      if (type === 'onetime' && variant === 'pro'){
+        updates = {
+          creditsAvailable: parseInt(JSON.parse(localStorage.getItem('user'))?.creditsAvailable) + 1000
+        }
+      }
+      if (type === 'subscription'){
+        updates = {
+          creditsAvailable: parseInt(JSON.parse(localStorage.getItem('user'))?.creditsAvailable) + 500,
+          isSubscribed: true
+        }
+      }
+  
+      await updateDoc(userRef, updates );
+      if(type ==='subscription'){
+        setPageTitle('Subscription confirmed. Cancel anytime')
+        setPageHeadline('Credits have been deposited to your account. Enjoy!')
+      }
+      setPageTitle('🥂 Purchase complete')
+      setPageHeadline('Succesfully added credits to your account')
+      setLoading(false)
+  
+    } catch (error) {
+      console.log(error)
+    }    
+  }
   
   
   return (

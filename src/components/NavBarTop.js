@@ -290,22 +290,18 @@ export default function NavBarTop(props) {
                   ?
                   null
                   :
-                  <button
-                  onClick={() => {
-                    startPayment()
-                  }}
-                  type="button"
-                  className="hidden sm:inline-flex  items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  <Link
+                  href="https://baruaai.lemonsqueezy.com/checkout/buy/66eb5f46-2783-452d-a9ca-35b8ef143062?discount=0"
+                  className="lemonsqueezy-button hidden sm:inline-flex  items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                   >
                     <BoltIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
                     Upgrade
-                  </button>)
+                  </Link>)
                   :
                   null
                 }
                 {
-                  typeof window !== "undefined" ? JSON.parse(window.localStorage.getItem('user'))?.isSubscribed : null
-                  ?
+                  typeof window !== "undefined" && JSON.parse(window.localStorage.getItem('user'))?.isSubscribed ?
                   <div className='flex justify-center items-center'>
                     <BoltIcon width={18} height={18} />
                     <span className='px-1 text-green-400'>Premium</span>
