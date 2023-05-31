@@ -270,9 +270,9 @@ export default function NavBarTop(props) {
               </div>
 
               <div className="flex items-center gap-x-4 lg:gap-x-6">
-                <div className='flex justify-center items-center'>
+                <div className='flex justify-center items-center text-gray-100'>
                   <CircleStackIcon width={18} height={18} />
-                  <span className='px-1'>{typeof window !== "undefined" ? JSON.parse(localStorage.getItem('user'))?.creditsAvailable : ''} Credits</span>
+                  <span className='px-1 text-gray-100'>{typeof window !== "undefined" ? JSON.parse(localStorage.getItem('user'))?.creditsAvailable : ''} Credits</span>
                 </div>
                 <button
                   onClick={() => {
