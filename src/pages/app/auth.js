@@ -170,6 +170,14 @@ export default function Auth() {
           </div>
   
           <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+          <p className="mt-10 text-center text-sm text-gray-400">
+              {isSignIn?'Not a member?':'Already a member?'}{' '}
+              <div onClick={() => {
+                isSignIn ? setIsSignIn(false) : setIsSignIn(true)
+              }} className="font-semibold leading-6 text-indigo-400 hover:text-indigo-300 cursor-pointer">
+                {isSignIn?'Create account':'Sign in'} 
+              </div>
+            </p>
             {
                 isSignIn
                 ?
@@ -358,14 +366,7 @@ export default function Auth() {
                 </div>
               </div>
             </div>
-            <p className="mt-10 text-center text-sm text-gray-400">
-              {isSignIn?'Not a member?':'Already a member?'}{' '}
-              <div onClick={() => {
-                isSignIn ? setIsSignIn(false) : setIsSignIn(true)
-              }} className="font-semibold leading-6 text-indigo-400 hover:text-indigo-300 cursor-pointer">
-                {isSignIn?'Create account':'Sign in'} 
-              </div>
-            </p>
+
           </div>
         </div>
         <CrispWithNoSSR />

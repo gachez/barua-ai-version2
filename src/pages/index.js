@@ -27,11 +27,24 @@ const navigation = [
   { name: 'How it works', href: '#features' },
   { name: 'Features', href: '#features' },
   { name: 'Pricing', href: '#pricing' },
-  { name: 'Blog', href: '#' },
 ]
 
 export default function SuccessPayment() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [communicationMethod, setCommunicationMethod] = useState('email');
+  const [deleting, setDeleting] = useState(false);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setDeleting(true);
+      setTimeout(() => {
+        setCommunicationMethod(prevMethod => prevMethod === 'email' ? 'DM' : 'email');
+        setDeleting(false);
+      }, 2500);
+    }, 5000);  // adjust the time according to your animation speed
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <div className="bg-gray-900">
@@ -68,16 +81,16 @@ export default function SuccessPayment() {
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
             <Link
+              href={"/app/auth"}
+              className="rounded-full bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Log in
+            </Link>
+            <Link
               href={"/app/demo"}
               className="rounded-full bg-green-600 px-4 py-2.5 text-sm mx-4 font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
             >
               Generate now
-            </Link>
-            <Link
-              href={"/app/auth"}
-              className="rounded-full bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Open app
             </Link>
           </div>
         </nav>
@@ -130,7 +143,7 @@ export default function SuccessPayment() {
                   type="button"
                   className="rounded-full bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
-                  Open app
+                  Log in
                 </button>
                 </div>
               </div>
@@ -155,22 +168,19 @@ export default function SuccessPayment() {
         <div className="py-24 sm:py-32 lg:pb-40">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
-              <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
-              Generate high converting sales emails in seconds
-              </h1>
+            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
+              Generate high converting sales <span className={deleting ? 'typewriter-text-deleting text-green-400' : 'typewriter-text text-green-400'}>{communicationMethod}s</span> in seconds
+            </h1>
               <h1 className="mt-6 text-lg leading-8 text-gray-300">
-              We leverage cutting-edge artificial intelligence to generate personalized, high-quality sales emails that truly convert.
+              Our platform transforms your key product details and objectives into persuasive prose, tailor-made to hook your audience and skyrocket conversion rates.
               </h1>
               <div className="mt-10 flex items-center justify-center gap-x-6">
-                <Link
-                  href="/app/demo"
-                  className="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
-                >
-                  Try free
-                </Link>
-                <Link href="/app/auth" className="text-sm font-semibold leading-6 text-white">
-                  Register <span aria-hidden="true">→</span>
-                </Link>
+              <Link
+                    href={"/app/demo"}
+                    className="rounded-full bg-green-600 px-4 py-2.5 text-sm mx-4 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-white hover:bg-gray-800"
+                  >
+                    Generate now
+                  </Link>
               </div>
             </div>
             {/* <Image
