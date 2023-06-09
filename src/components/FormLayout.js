@@ -221,6 +221,9 @@ export default function FormLayout(props) {
 
   React.useEffect(() => {
     setIsFormReady(true);
+    if(props.type === 'demo') {
+      return
+    }
     getOffers()
     getEmails()
     getProspects()
