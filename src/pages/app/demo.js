@@ -118,8 +118,8 @@ export default function Demo() {
                 </Dialog>
             </header>
             <Banner />
-            <main className="flex-col">
-            <div className="mx-auto max-w-7xl py-0 sm:px-6 lg:px-8 bg-rgb(17 24 39 / var(1)) ">
+            <main className="flex-col bg-black">
+            <div className="mx-auto max-w-7xl py-0 sm:px-6 lg:px-8">
                 {/* Your content */}
                 <FormLayout type="demo" />
             </div>
