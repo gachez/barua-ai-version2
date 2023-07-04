@@ -71,10 +71,11 @@ export default function Auth() {
         const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
-        // Signed in 
+        // // Signed in 
         setIsLoading(false)
-        setSignedInUserCookie(user.email)
-        router.push('/app/dashboard')
+        createUser(user.displayName,user.email)
+        // setSignedInUserCookie(user.email)
+        // router.push('/app/dashboard')
       }).catch((error) => {
         // Handle Errors here.
         const errorMessage = error.message;
