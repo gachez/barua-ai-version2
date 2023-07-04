@@ -13,7 +13,7 @@ import Link from 'next/link';
 import Alert from '@mui/material/Alert'
 import Google from '@/img/search.png';
 import Footer from '@/components/Footer';
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider, fetchSignInMethodsForEmail } from "firebase/auth";
 import dynamic from 'next/dynamic'
 
 const CrispWithNoSSR = dynamic(
@@ -61,6 +61,18 @@ export default function Auth() {
         }
   }
 
+  async function checkUserExists(email) {
+    const auth = getAuth();
+    try {
+      const methods = await fetchSignInMethodsForEmail(auth, email);
+      return methods.length > 0;
+    } catch (error) {
+      // Handle any errors that occur during the check
+      console.log('Error checking user existence:', error);
+      return false;
+    }
+  }
+  
   async function signInWithGoogle(){
     const auth = getAuth();
     const provider = new GoogleAuthProvider();
@@ -73,9 +85,15 @@ export default function Auth() {
         const user = result.user;
         // // Signed in 
         setIsLoading(false)
+        // Check if the user account already exists
+        const userExists = await checkUserExists(user.email);
+
+        if(userExists){
+          setSignedInUserCookie(user.email)
+          router.push('/app/dashboard')
+          return
+        }
         createUser(user.displayName,user.email)
-        // setSignedInUserCookie(user.email)
-        // router.push('/app/dashboard')
       }).catch((error) => {
         // Handle Errors here.
         const errorMessage = error.message;
