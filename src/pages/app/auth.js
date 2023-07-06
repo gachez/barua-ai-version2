@@ -352,7 +352,7 @@ export default function Auth() {
                   </form>
                 )
             }
-              {/* <div>
+            <div>
               <div className="relative mt-10">
                 <div className="absolute inset-0 flex items-center" aria-hidden="true">
                   <div className="w-full border-t border-gray-200" />
@@ -378,7 +378,7 @@ export default function Auth() {
                   <span className="text-sm font-semibold leading-6">Google</span>
                 </div>
               </div>
-            </div> */}
+            </div>
 
           </div>
         </div>
