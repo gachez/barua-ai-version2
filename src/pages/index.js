@@ -87,7 +87,7 @@ export default function SuccessPayment() {
               Log in
             </Link>
             <Link
-              href={"/app/demo"}
+              href={"/app/auth"}
               className="rounded-full bg-green-600 px-4 py-2.5 text-sm mx-4 font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
             >
               Generate now
@@ -132,7 +132,7 @@ export default function SuccessPayment() {
                 </div>
                 <div className="py-6">
                   <Link
-                    href={"/app/demo"}
+                    href={"/app/auth"}
                     className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-white hover:bg-gray-800"
                   >
                     Generate now
@@ -176,7 +176,7 @@ export default function SuccessPayment() {
               </h1>
               <div className="mt-10 flex items-center justify-center gap-x-6">
               <Link
-                    href={"/app/demo"}
+                    href={"/app/auth"}
                     className="rounded-full bg-green-600 px-4 py-2.5 text-sm mx-4 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-white hover:bg-gray-800"
                   >
                     Generate now
