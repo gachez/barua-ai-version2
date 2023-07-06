@@ -1,19 +1,19 @@
 "use client"
 import LogoBlack from '@/img/logo-black.png'
 import Image from 'next/image'
-import React, { useEffect } from 'react'
-import { generateAccountNumber, getSignedInUserCookie, setSignedInUserCookie  } from '@/utils'
+import React from 'react'
+import { db } from '@/firebase.config'; 
+import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
+import { generateAccountNumber, setSignedInUserCookie  } from '@/utils'
 import { auth } from "@/firebase.config";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { collection, addDoc } from "firebase/firestore"; 
-import { db } from '@/firebase.config';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"; 
 import { LinearProgress } from '@mui/material';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Alert from '@mui/material/Alert'
 import Google from '@/img/search.png';
 import Footer from '@/components/Footer';
-import { getAuth, signInWithPopup, GoogleAuthProvider, fetchSignInMethodsForEmail } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import dynamic from 'next/dynamic'
 
 const CrispWithNoSSR = dynamic(
@@ -61,17 +61,11 @@ export default function Auth() {
         }
   }
 
-  async function checkUserExists(email) {
-    const auth = getAuth();
-    try {
-      const methods = await fetchSignInMethodsForEmail(auth, email);
-      return methods.length > 0;
-    } catch (error) {
-      // Handle any errors that occur during the check
-      console.log('Error checking user existence:', error);
-      return false;
-    }
-  }
+  async function checkUserExists (email) {
+    const q = query(collection(db, "users"), where("email", "==", email));
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.length > 0
+  };
   
   async function signInWithGoogle(){
     const auth = getAuth();
