@@ -26,10 +26,10 @@ export async function getStaticPaths() {
 }
 
 const navigation = [
-    { name: 'How it works', href: '#features' },
-    { name: 'Features', href: '#features' },
-    { name: 'Pricing', href: '#pricing' },
-    { name: 'Blog', href: '#blog' }
+    { name: 'How it works', href: '/' },
+    { name: 'Features', href: '/' },
+    { name: 'Pricing', href: '/' },
+    { name: 'Blog', href: '/' }
   ]
 
 export default function Posts({ postData }) {
