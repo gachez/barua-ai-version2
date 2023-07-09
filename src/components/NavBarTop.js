@@ -15,7 +15,7 @@ import {
   HomeIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
-import { ChevronDownIcon, BoltIcon,BookmarkIcon, CodeBracketIcon ,CircleStackIcon, Square3Stack3DIcon, BanknotesIcon} from '@heroicons/react/20/solid'
+import { ChevronDownIcon, BoltIcon,BookmarkIcon, CodeBracketIcon ,CircleStackIcon, Square3Stack3DIcon, BanknotesIcon, ArrowPathRoundedSquareIcon} from '@heroicons/react/20/solid'
 import Link from 'next/link';
 import SubscriptionPaymentModal from './SubscriptionPaymentModal';
 import { getSignedInUserCookie } from '@/utils';
@@ -101,6 +101,7 @@ export default function NavBarTop(props) {
   const navigation = [
     { name: 'Dashboard', href: '/app/dashboard', icon: HomeIcon, current: asPath.includes('dashboard') },
     { name: 'Email generator', href: '/app/generator', icon: CodeBracketIcon, current: asPath.includes('generator') },
+    { name: 'Sequence generator', href: '/app/sequence', icon: ArrowPathRoundedSquareIcon, current: asPath.includes('sequence') },
     { name: 'Saved emails', href: '/app/emails', icon: BookmarkIcon, current: asPath.includes('emails') },
     { name: 'Offers', href: '/app/offers', icon: FolderIcon, current: asPath.includes('offers') },
     { name: 'Database', href: '/app/database', icon: Square3Stack3DIcon, current: asPath.includes('database')},
