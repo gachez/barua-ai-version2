@@ -57,7 +57,8 @@ export default function SequenceFormLayout(props) {
   const [instruction, setInstruction] = React.useState('')
   const [savedProspects, setSavedProspects] = React.useState([])
   const [userDocumentRef,setUserDocumentRef] = React.useState('')
-  const [sequences, setSequences] = React.useState([]);
+  const [sequences, setSequences] = React.useState([])
+  const [sequenceString, setSequenceString] = React.useState('')
   const [currentSequenceIndex, setCurrentSequenceIndex] = React.useState(0);
 
   function closeAlert(delay = 3500) {
@@ -70,7 +71,7 @@ export default function SequenceFormLayout(props) {
   function downloadEmail() {
     setLoadingBar(true)
     axios.post(`${Config.API_URI}/download-emails/${userId}`, {
-      emailData: generatedEmail
+      emailData: sequenceString
     },
       {
         responseType: 'blob'
@@ -121,40 +122,6 @@ export default function SequenceFormLayout(props) {
         setAlertText('Something went wrong fetching your emails')
         setLoadingBar(false)
         closeAlert()
-    }
-  }
-
-  async function saveEmail() {
-    setLoadingBar(true)
-    if(JSON.parse(localStorage.getItem('user')).isSubscribed === false && userEmails.length >= 100){
-      setAlertStatus('error')
-      setAlertText('Error occured saving message! Please upgrade to save more emails.')
-      setShowFormAlert(true)
-      closeAlert()
-      return
-    }
-    try {
-      const docRef = await addDoc(collection(db, "userEmails"), {
-        userId: JSON.parse(localStorage.getItem('user'))?.email,
-        email: generatedEmail,
-        createdAt: new Date().toISOString(),
-        offer: productDesc,
-        targetCustomer: targetDesc,
-        targetName: targetName
-      });
-      console.log("Email created with ID: ", docRef.id);
-      setAlertStatus('success')
-      setAlertText('✨ Succesfully saved message!')
-      setShowFormAlert(true)
-      setLoadingBar(false)
-      closeAlert()
-    } catch (error) {
-      console.error(error)
-      setLoadingBar(false)
-      setAlertStatus('error')
-      setAlertText('Error occured saving message!')
-      setShowFormAlert(true)
-      closeAlert()
     }
   }
 
@@ -264,6 +231,7 @@ export default function SequenceFormLayout(props) {
         // Extract the data from the response
         const data = response.data;
         console.log(data);
+        setSequenceString(data)
         getUser();
         editUserCredits()
         setSequences(separateEmails(data))
