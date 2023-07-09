@@ -50,7 +50,7 @@ export default function SuccessPayment({ allPostsData }) {
     const intervalId = setInterval(() => {
       setDeleting(true);
       setTimeout(() => {
-        setCommunicationMethod(prevMethod => prevMethod === 'email' ? 'DM' : 'email');
+        setCommunicationMethod(prevMethod => prevMethod === 'sequence' ? 'email' : 'sequence');
         setDeleting(false);
       }, 2500);
     }, 5000);  // adjust the time according to your animation speed
