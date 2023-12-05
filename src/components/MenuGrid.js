@@ -3,7 +3,8 @@ import {
     CodeBracketIcon,
     FolderIcon,
     DocumentDuplicateIcon,
-    Square3Stack3DIcon
+    Square3Stack3DIcon,
+    ArrowPathRoundedSquareIcon
   } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 
@@ -14,6 +15,13 @@ import Link from 'next/link'
       icon: CodeBracketIcon,
       iconForeground: 'text-purple-700',
       iconBackground: 'bg-purple-50',
+    },
+    {
+      title: 'Sequence generator',
+      href: '/app/sequence',
+      icon: ArrowPathRoundedSquareIcon,
+      iconForeground: 'text-teal-700',
+      iconBackground: 'bg-teal-50',
     },
     {
       title: 'Saved emails',
