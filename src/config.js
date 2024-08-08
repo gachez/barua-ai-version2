@@ -1,5 +1,5 @@
 const Config = {
-    API_URI: 'https://barua-ai-production.up.railway.app'
+    API_URI: 'https://api.baruaai.com'
 }
 
 export default Config
