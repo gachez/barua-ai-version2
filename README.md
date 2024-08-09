@@ -11,10 +11,6 @@ Welcome to the **Barua AI Frontend** repository! This is the frontend codebase f
 - [Contributing](#contributing)
 - [License](#license)
 
-## Demo Video
-Check out this demo video of our project in action:
-
-<iframe width="560" height="315" src="https://www.youtube.com/embed/dxA8oaMotV8" frameborder="0" allowfullscreen></iframe>
 
 ## Features
 
