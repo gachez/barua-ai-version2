@@ -1,6 +1,6 @@
-# Barua AI Frontend
+# Barua AI
 
-Welcome to the **Barua AI Frontend** repository! This is the frontend codebase for the Barua AI application, a powerful tool for generating AI-driven sales emails, DMs, and personalized messages that convert. Built with Next.js, this project is designed to offer a seamless user experience, allowing users to interact with our AI and manage their outreach campaigns effectively.
+Welcome to the **Barua AI** repository! This is the frontend codebase for the Barua AI application, a powerful tool for generating AI-driven sales emails, DMs, and personalized messages that convert. Built with Next.js, this project is designed to offer a seamless user experience, allowing users to interact with our AI and manage their outreach campaigns effectively.
 
 ![Deepgram Image](https://deepgram.com/_next/image?url=https%3A%2F%2Fv1.whalesyncusercontent.com%2Fv1%2F054166ee54f426e9cd3e081e%2F05e3eabfffb2b8e543b01ca3%2Fe2deda43ebf3826118325a3b%2F2a32ea36-bae1-4ac9-97d8-8a239d01746a.jpeg&w=828&q=75)
 
